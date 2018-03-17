@@ -15,6 +15,7 @@ class Job
 private:
     string name;
     int id;
+    string company;
     int date;
     string location;
 public:
@@ -23,11 +24,12 @@ public:
     {
         name = "";
         id = 0;
+        company = "";
         date = 0;
         location = "";
     };
     
-    Job(int id, string name, int date, string location)
+    Job(int id, string name, string company, int date, string location)
     {
         this->name = name;
         this->id = id;
@@ -38,6 +40,7 @@ public:
     // Setters
     void setName(string name) {this->name = name;};
     void setID(int id) {this->id = id;};
+    void setCompany(string company) {this->company = company;};
     void setDate(int date) {this->date = date;};
     void setLocation(string location) {this->location = location;};
     
@@ -45,6 +48,7 @@ public:
     // Getters
     string getName() const {return name;};
     int getID() const {return id;};
+    string getCompany() const {return company;};
     int getDate() const {return date;};
     string getLocation() const {return location;};
     
