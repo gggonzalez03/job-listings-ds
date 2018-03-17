@@ -6,9 +6,14 @@
 //  Copyright © 2018 Ging Gonzalez. All rights reserved.
 //
 
+#include <fstream>
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <iomanip>
+
+#include "Job.h"
+#include "BinarySearchTree.h"
 using namespace std;
 
 
@@ -31,6 +36,8 @@ void logout();
 
 int generateID();
 int getTodaysDate();
+
+void readJobs(BinarySearchTree<Job> &jobs, string fileName);
 
 
 int main() {
@@ -178,9 +185,11 @@ void addJobs()
     cout << "Enter the name of the txt file containing the job listings: ";
     getline(cin, fileName);
     
-    // TODO:
-    // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
-    cout << "Reading file " << fileName << endl;
+    BinarySearchTree<Job> *jobs = new BinarySearchTree<Job>();
+    
+    readJobs(*jobs, fileName);
+    
+    
 }
 
 void del()
@@ -260,4 +269,47 @@ bool login()
     return false;
 }
 
+void readJobs(BinarySearchTree<Job> &jobs, string fileName)
+{
+    
+    string title = "";
+    string company = "";
+    string city = "";
+    int id = 0;
+    int date = 0;
+    
+    ifstream infile;
+    infile.open(fileName);
+    
+    while(!infile)
+    {
+        cout << "Error opening " << fileName << " for reading\n";
+        exit(111);
+    }
+    
+    // TODO:
+    // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
+    cout << "Reading file " << fileName << endl;
+    Job *job = nullptr;
+    
+    while(infile >> id)
+    {
+        infile.ignore();
+        getline(infile, title, ';');
+        infile.ignore();
+        getline(infile, company, ';');
+        infile.ignore();
+        getline(infile, city, ';');
+        infile.ignore();
+        infile >> date;
+        
+        // Create a Job object
+        job = new Job(id, title, company, date, city);
+        
+        // Insert the object
+        jobs.insert(*job);
+        
+    }
+    infile.close();
+}
 

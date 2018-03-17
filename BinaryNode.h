@@ -1,6 +1,6 @@
 // Node for a binary tree
 // Created by Frank M. Carrano and Tim Henry.
-// Modified by: <=============================== ADD YOUR NAME HERE
+// Modified by: Ging Gonzalez
  
 #ifndef _BINARY_NODE
 #define _BINARY_NODE
