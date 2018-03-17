@@ -61,13 +61,13 @@ public:
         location = job.location;
     }
     
-    bool operator < (const Job& job) {
+    bool operator < (const Job& job) const {
         if(id < job.id)
             return true;
         return false;
     }
     
-    bool operator > (const Job& job) {
+    bool operator > (const Job& job) const {
         if(id > job.id)
             return true;
         return false;
