@@ -9,15 +9,21 @@ class HashEntry {
 private:
   K key;
   V value;
-  Bucket<K,V> **bucketArr;
+  Bucket<K,V> *bucketArr;
 public:
   // Constructor
-  HashEntry(K, V);
+    HashEntry();
+  HashEntry(K,V);
   // Getters
   K getKey();
   V getValue();
-  *Bucket<K,V> getBucketArr();
+  Bucket<K,V> getBucketArr();
 };
+
+template<typename K, typename V>
+HashEntry<K,V>::HashEntry() {
+    
+}
 
 template<typename K, typename V>
 HashEntry<K,V>::HashEntry(K key, V value) {
@@ -37,7 +43,7 @@ V HashEntry<K, V>::getValue() {
 }
 
 template<typename K, typename V>
-*Bucket<K,V> HashEntry<K,V>::getBucketArr() {
+Bucket<K,V> HashEntry<K,V>::getBucketArr() {
   return bucketArr;
 }
 #endif
