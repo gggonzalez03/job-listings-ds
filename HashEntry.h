@@ -21,13 +21,13 @@ HashEntry<K,V>::HashEntry(K key, V value) {
   this->value = value;
 }
 
-template<typename K>
-K::getKey() {
+template<typename K, typename V>
+K HashEntry<K, V>::getKey() {
   return key;
 }
 
-template<typename V>
-V::getValue() {
+template<typename K, typename V>
+V HashEntry<K, V>::getValue() {
   return value;
 }
 
