@@ -31,8 +31,28 @@ private:
     
     // Find the largest node item value
     BinaryNode<ItemType>* _findLargest(BinaryNode<ItemType>* treePtr) const;
+    
+    // Compare function pointer
+    bool (*compare)(const ItemType &, const ItemType &);
+    bool defaultCmp(const ItemType &a, const ItemType &b)
+    {
+        if (a > b)
+            return true;
+        else return false;
+    }
    
-public:  
+public:
+    // Constructors
+    BinarySearchTree()
+    {
+        compare = &defaultCmp;
+    }
+    
+    BinarySearchTree(bool cmp(const ItemType &, const ItemType &))
+    {
+        compare = cmp;
+    }
+    
 	// insert a node at the correct location
     bool insert(const ItemType & newEntry);
 	// remove a node if found
@@ -105,7 +125,7 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::_insert(BinaryNode<ItemType>* 
     }
     else
     {
-        if (newNodePtr->getItem() < nodePtr->getItem())
+        if (compare(nodePtr->getItem(), newNodePtr->getItem()))
         {
             nodePtr->setLeftPtr(_insert(nodePtr->getLeftPtr(), newNodePtr));
         }
@@ -129,9 +149,9 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::_remove(BinaryNode<ItemType>* 
 		success = false;
 		return 0;
 	}
-	if (nodePtr->getItem() > target)		 
+	if (compare(nodePtr->getItem(), target))
 		nodePtr->setLeftPtr(_remove(nodePtr->getLeftPtr(), target, success));
-	else if (nodePtr->getItem() < target)	 
+	else if (compare(target, nodePtr->getItem()))
 		nodePtr->setRightPtr(_remove(nodePtr->getRightPtr(), target, success));
 	else		
 	{
@@ -196,10 +216,10 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::findNode(BinaryNode<ItemType>*
 {
     if (nodePtr == NULL)
         return NULL;
-    if (target < nodePtr->getItem())
+    if (compare(nodePtr->getItem(), target))
         return findNode(nodePtr->getLeftPtr(), target);
     else
-        if (target > nodePtr->getItem())
+        if (compare(nodePtr->getItem(), target))
             return findNode(nodePtr->getRightPtr(), target);
         else
             return nodePtr;

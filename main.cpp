@@ -41,24 +41,38 @@ void logout();
 
 // display function to pass to BST traverse functions
 void display(Job &anItem);
+bool compareID(const Job &, const Job &);
+bool compareDate(const Job &, const Job &);
+void printIndentedItem(int depth, Job &job);
 
 int generateID();
 int getTodaysDate();
 
-void readJobs(BinarySearchTree<Job> &jobs, string fileName);
+void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &jobs, string fileName);
+void readJobsIntoArray(Job *jobs, string fileName);
 
 
 int main() {
     string choice;
     
+    // Unsorted list
+    Job *unsortedJobs = new Job[25];
+    
     // List of jobs that is based on the primary key (unique id)
-    BinarySearchTree<Job> *jobs = new BinarySearchTree<Job>();
+    BinarySearchTree<Job> *jobs = new BinarySearchTree<Job>(compareID);
     
     // List of jobs that is based on the secondary key (date)
-    BinarySearchTree<Job> *jobs2 = new BinarySearchTree<Job>();
+    BinarySearchTree<Job> *jobs2 = new BinarySearchTree<Job>(compareDate);
     
     // The hash table for the primary tree
     HashTable<int, Job> *hashTable = new HashTable<int, Job>();
+    
+    
+    readJobsIntoArray(unsortedJobs, "jobs.txt");
+    
+    // read the jobs into the trees
+    readJobsIntoBinarySearchTree(*jobs, "jobs.txt");
+    readJobsIntoBinarySearchTree(*jobs2, "jobs.txt");
     
     while (*choice.c_str() != 'L')
     {
@@ -85,13 +99,44 @@ int main() {
                 break;
         }
     }
-    
-    jobs->inOrder(display);
 }
 
 void display(Job & anItem)
 {
-    cout << anItem.getID() << " " << anItem.getName() << " " << anItem.getCompany() << endl;
+    cout << anItem.getID() << " "
+    << anItem.getName() << " "
+    << anItem.getCompany() << " "
+    << anItem.getLocation() << " "
+    << anItem.getDate() << " "
+    << endl;
+}
+
+// Compare id such that lower ids are printed first
+bool compareID(const Job &a, const Job &b)
+{
+    if (a.getID() > b.getID())
+        return true;
+    return false;
+}
+
+// Compare date such that the latest first are listed
+bool compareDate(const Job &a, const Job &b)
+{
+    if (a.getDate() <= b.getDate())
+        return true;
+    return false;
+}
+
+// Prints an item that is indented (this is a function to be passed in printTree)
+void printIndentedItem(int depth, Job &job)
+{
+    for (int i = 0; i < depth; i++) {
+        cout << "   ";
+    }
+    
+    cout << depth << ". ";
+    display(job);
+    cout << endl;
 }
 
 void displayMenu()
@@ -105,13 +150,32 @@ void displayMenu()
 
 void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2)
 {
-    cout << "Display listings" << endl;
+    string choice = "";
     
-    // TODO:
-    // Add list as unsorted data
-    // sorted by primary key
-    // sorted by secondary key
-    // Special print, indented list
+    cout << "U - Print unsorted job list" << endl;
+    cout << "P - Print jobs sorted by ID" << endl;
+    cout << "S - Print jobs sorted by date" << endl;
+    cout << "I - Print jobs as an indented list" << endl;
+    
+    cout << "Enter choice: ";
+    getline(cin, choice);
+    
+    switch (*choice.c_str()) {
+        case 'U':
+//            printUnsorted();
+            break;
+        case 'P':
+            jobs.inOrder(display);
+            break;
+        case 'S':
+            jobs2.inOrder(display);
+            break;
+        case 'I':
+            jobs.printTree(printIndentedItem, 1);
+            break;
+        default:
+            break;
+    }
 }
 
 void search(BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
@@ -119,7 +183,7 @@ void search(BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
     string choice = "";
     
     cout << "P - Search job by ID" << endl;
-    cout << "SK = Search job by date" << endl;
+    cout << "SK - Search job by date" << endl;
     
     cout << "Enter choice: ";
     getline(cin, choice);
@@ -215,8 +279,8 @@ void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTabl
     cout << "Enter the name of the txt file containing the job listings: ";
     getline(cin, fileName);
     
-    readJobs(jobs, fileName);
-    readJobs(jobs2, fileName);
+    readJobsIntoBinarySearchTree(jobs, fileName);
+    readJobsIntoBinarySearchTree(jobs2, fileName);
     
     // TODO:
     // Add to hash table
@@ -299,7 +363,7 @@ bool login()
     return false;
 }
 
-void readJobs(BinarySearchTree<Job> &jobs, string fileName)
+void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &jobs, string fileName)
 {
     
     string title = "";
@@ -347,3 +411,47 @@ void readJobs(BinarySearchTree<Job> &jobs, string fileName)
     infile.close();
 }
 
+void readJobsIntoArray(Job *jobs, string fileName)
+{
+    string title = "";
+    string company = "";
+    string city = "";
+    int id = 0;
+    int date = 0;
+    
+    ifstream infile;
+    infile.open(fileName);
+    
+    while(!infile)
+    {
+        cout << "Error opening " << fileName << " for reading\n";
+        exit(111);
+    }
+    
+    // TODO:
+    // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
+    cout << "Reading file " << fileName << endl;
+    Job *job = nullptr;
+    int index = 0;
+    
+    while(infile >> id)
+    {
+        infile.ignore();
+        getline(infile, title, ';');
+        infile.ignore();
+        getline(infile, company, ';');
+        infile.ignore();
+        getline(infile, city, ';');
+        infile.ignore();
+        infile >> date;
+        
+        // Create a Job object
+        job = new Job(id, title, company, date, city);
+        
+        // Insert the address
+        *(jobs + index) = *job;
+        
+        index++;
+    }
+    infile.close();
+}
