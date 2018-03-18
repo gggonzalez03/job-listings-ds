@@ -11,7 +11,7 @@ template<typename K, typename V>
 class HashTable {
 private:
   // HashEntry array
-  HashEntry<K,V> arr[][];
+  HashEntry<K,V> *arr;
   double loadFactor;
   int collisionCount;
   int numOfElements;
@@ -31,7 +31,8 @@ public:
 
 template<typename K, typename V>
 HashTable<K,V>::HashTable() {
-  arr = new HashEntry<K,V>[TABLE_SIZE][BUCKET_SIZE];
+    // TODO: This gives me error
+  // arr = new HashEntry<K,V>[TABLE_SIZE];
   loadFactor = 0.0;
   collisionCount = 0;
   numOfElements = 0;
@@ -89,3 +90,5 @@ template<typename K, typename V>
 V HashTable<K,V>::remove(K key) {
 
 }
+
+#endif
