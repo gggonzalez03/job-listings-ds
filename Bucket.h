@@ -56,17 +56,15 @@ V Bucket<K,V>::searchBucketArray(K key) {
 template<typename K, typename V>
 void Bucket<K,V>::insertBucketArray(K key, V value) {
   int index = 0;
+  HashEntry<K,V> *temp = new HashEntry<K,V>(key value);
   // if empty index is at 0
   if(bucketArray[index] == NULL) {
-    HashEntry<K,V> *temp = new HashEntry<K,V>(key value);
     bucketArray[index] = temp;
     count++;
   } else if(bucketArray[index + 1] == NULL) { //if empty index is at 1
-    HashEntry<K,V> *temp = new HashEntry<K,V>(key value);
     bucketArray[index] = temp;
     count++;
   } else if(bucketArray[index + 2] == NULL) { // if empty index is at 2
-    HashEntry<K,V> *temp = new HashEntry<K,V>(key value);
     bucketArray[index] = temp;
     count++;
   }
