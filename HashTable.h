@@ -61,15 +61,15 @@ int HashTable<K,V>::badHash(K key) {
 // Searches HashTable based on the key, hashes key value to get the index
 template<typename K,typename V>
 V HashTable<K,V>::searchTable(K key) {
-    int hashedIndex = goodHash(key);
-    // if hashedIndex contains the search key
-    if(arr[hashedIndex]->getKey() == key) {
-        return arr[hashedIndex]->getValue();
-    } else {
-        // searches the bucketArray for the search key
-        arr[hashedIndex]->getBucketArr()->searchBucketArray(key);
-    }
-    return NULL;
+//    int hashedIndex = goodHash(key);
+//    // if hashedIndex contains the search key
+//    if(arr[hashedIndex]->getKey() == key) {
+//        return arr[hashedIndex]->getValue();
+//    } else {
+//        // searches the bucketArray for the search key
+//        arr[hashedIndex]->getBucketArr()->searchBucketArray(key);
+//    }
+//    return NULL;
 }
 
 // Inserts into HashTable using goodHash()
