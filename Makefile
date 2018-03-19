@@ -4,7 +4,7 @@ CFLAGS = -c -Wall
 
 all: jlds
 
-hw5: main.o
+jlds: main.o
 	$(CC) main.o -o jlds
 
 main.o: main.cpp
