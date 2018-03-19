@@ -48,7 +48,7 @@ int Bucket<K,V>::getCount() {
 template<typename K, typename V>
 bool Bucket<K,V>::searchBucketArray(K key) {
     int index = 0;
-    
+
     while (index < BUCKET_SIZE)
     {
         if (bucketArray[index].key == key)
@@ -68,12 +68,15 @@ bool Bucket<K,V>::searchBucketArray(K key) {
 
 template<typename K, typename V>
 bool Bucket<K,V>::insertBucketArray(K key, V value) {
-    if (count < BUCKET_SIZE)
-    {
-        bucketArray[count] = BucketItem(key, value);
-        count++;
-        return true;
+  int index = 0;
+  while(index < BUCKET_SIZE) {
+    if(bucketArray[index] == NULL) {
+      bucketArray[index] = BucketItem(key, value);
+      count++;
+      return true;
     }
+    index++;
+  }
     return false;
     //  int index = 0;
     //  HashEntry<K,V> *temp = new HashEntry<K,V>(key value);
@@ -93,7 +96,7 @@ bool Bucket<K,V>::insertBucketArray(K key, V value) {
 template<typename K, typename V>
 bool Bucket<K,V>::removeBucketArray(K key) {
     int index = 0;
-    
+
     while (index < BUCKET_SIZE)
     {
         if (bucketArray[index].key == key)
@@ -104,7 +107,7 @@ bool Bucket<K,V>::removeBucketArray(K key) {
         }
         index++;
     }
-    
+
     return false;
     //  int index = 0;
     //  // if item is at index[0] of bucketArray
