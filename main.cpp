@@ -362,8 +362,13 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
     string id = "";
     printHeader("Delete A Job By ID");
     printHeader("TO BE IMPLEMENTED");
-    // cout << "Enter job id to delete: ";
-    // getline(cin, id);
+    cout << "Enter job id to delete: ";
+    getline(cin, id);
+    
+    Job *job = new Job();
+    job->setID(stoi(id));
+    
+    jobs.remove(*job);
 
     // TODO:
     // Delete in BST (Primary and Secondary)

@@ -20,6 +20,6 @@
 2929 Shipping Personnel; Leading Contract Manufacturer; Santa Clara; 20180105
 2377 Medical Receptionist; California Spine Center; San Jose; 20180227
 1512 Banker; Blackstone Gaming LLC; San Jose; 20180218
-2774 Business Program Intern; Siemens AG; Mountain View; 20180213
+2774 Business Intern; Siemens AG; Mountain View; 20180213
 2135 Acoustic Integration Engineer; Apple; Santa Clara Valley; 20180227
-2786 Integration Engineer; Foveon Inc.; San Jose; 20180228
+2786 Engineer; Foveon Inc.; San Jose; 20180228
