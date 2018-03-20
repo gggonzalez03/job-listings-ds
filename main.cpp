@@ -52,8 +52,15 @@ int getTodaysDate();
 void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &jobs, string fileName);
 void readJobsIntoArray(Job *jobs, string fileName);
 
+// Simple helper functions
+void printHeader(string title);
 
 int main() {
+    
+    // Ask the user for un and pw until a valid combination is entered
+    // while (!login()) { }
+    
+    // Only start assigning variable after successful login
     string choice;
 
     // Unsorted list
@@ -120,10 +127,12 @@ bool compareID(const Job &a, const Job &b)
     return false;
 }
 
+// TODO:
+// Verify that this is legal in BSTs. This BST has the larger values on the left side of the tree
 // Compare date such that the latest first are listed
 bool compareDate(const Job &a, const Job &b)
 {
-    if (a.getDate() <= b.getDate())
+    if (a.getDate() > b.getDate())
         return true;
     return false;
 }
@@ -134,29 +143,40 @@ void printIndentedItem(int depth, Job &job)
     for (int i = 0; i < depth; i++) {
         cout << "   ";
     }
-
+    
     cout << depth << ". ";
     display(job);
     cout << endl;
 }
 
+// Prints a header
+void printHeader(string title)
+{
+    cout << "____________________________________________________________" << endl;
+    cout << title << endl;
+    cout << "------------------------------------------------------------" << endl;
+}
+
 void displayMenu()
 {
+    printHeader("Menu");
     cout << "D - Display Job Listings" << endl;
     cout << "S - Search Job Listings" << endl;
     cout << "A - Add Job Listings" << endl;
     cout << "R - Delete Job Listings" << endl;
     cout << "L - Logout" << endl;
+    cout << endl;
 }
 
 void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2)
 {
     string choice = "";
-
+    cout << endl;
     cout << "U - Print unsorted job list" << endl;
     cout << "P - Print jobs sorted by ID" << endl;
     cout << "S - Print jobs sorted by date" << endl;
     cout << "I - Print jobs as an indented list" << endl;
+    cout << endl;
 
     cout << "Enter choice: ";
     getline(cin, choice);
@@ -164,15 +184,20 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
     switch (*choice.c_str()) {
         case 'U':
             //            printUnsorted();
+            printHeader("Unsorted Jobs List");
+            printHeader("TO BE IMPLEMENTED");
             break;
         case 'P':
+            printHeader("Sorted by ID");
             jobs.inOrder(display);
             break;
         case 'S':
+            printHeader("Sorted by Date");
             jobs2.inOrder(display);
             break;
         case 'I':
-            jobs.printTree(printIndentedItem, 1);
+            printHeader("Tree As Indented List");
+            jobs2.printTree(printIndentedItem, 1);
             break;
         default:
             break;
@@ -207,20 +232,26 @@ void searchById(HashTable<int, Job> &hashTable)
     cout << "Enter 5 digit ID (ex. 12423): ";
     getline(cin, id);
 
-    cout << "Search the list using " << id << " " << endl;
+    printHeader("Search by ID Result");
+    printHeader("TO BE IMPLEMENTED");
 }
 // updated by Fawzan
 void searchByDate(BinarySearchTree<Job> &jobs2)
 {
     string date = "";
+    Job *job = new Job();
 
-    cout << "Enter date (mm/dd/yyy): ";
+    cout << "Enter date (yyyymmdd): ";
     getline(cin, date);
 
     // Use this to search the tree
-    // int searchDate = stoi(date);
-
-    cout << "Search the list by date: " << date;
+    int searchDate = stoi(date);
+    
+    job->setDate(searchDate);
+    
+    printHeader("Search by Date Results");
+    jobs2.getEntries(*job, display);
+    cout << endl;
 }
 
 void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
@@ -348,8 +379,6 @@ void logout()
     return;
 }
 
-// TODO:
-// Doesnt return false
 bool login()
 {
     string un;
@@ -366,11 +395,8 @@ bool login()
     {
         return true;
     }
-    else
-    {
-        cout << "Please enter valid username and password." << endl;
-        login();
-    }
+    
+    cout << "Please enter valid username and password." << endl;
 
     return false;
 }
@@ -395,7 +421,6 @@ void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &jobs, string fileName)
 
     // TODO:
     // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
-    cout << "Reading file " << fileName << endl;
     Job *job = nullptr;
 
     while(infile >> id)
@@ -442,7 +467,6 @@ void readJobsIntoArray(Job *jobs, string fileName)
 
     // TODO:
     // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
-    cout << "Reading file " << fileName << endl;
     Job *job = nullptr;
     int index = 0;
 
@@ -477,7 +501,7 @@ int generateID(HashTable<int, Job> &hashTable) {
     //        newID = rand() % 2000 + 1000;
     //    }
     //    return newID;
-    return 0;
+    return newID;
 }
 // updated by Fawzan
 // Generates the current days date (Today)
