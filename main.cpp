@@ -207,9 +207,11 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
 void search(BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
 {
     string choice = "";
-
+    
+    cout << endl;
     cout << "P - Search job by ID" << endl;
     cout << "SK - Search job by date" << endl;
+    cout << endl;
 
     cout << "Enter choice: ";
     getline(cin, choice);
@@ -258,8 +260,10 @@ void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<in
 {
     string choice = "";
 
+    cout << endl;
     cout << "J - Add single entry" << endl;
     cout << "F - Add listings using a file" << endl;
+    cout << endl;
 
     cout << "Enter choice: ";
     getline(cin, choice);
@@ -285,6 +289,7 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     // TODO:
     // Take the input and concatenate such that these
     // variables are set appropriately
+    printHeader("Add A Job");
     string title = "";
     string company = "";
     string city = "";
@@ -293,10 +298,8 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
 
     cout << "Enter job information. \nTitle: ";
     getline(cin, title);
-
     cout <<"Company: ";
     getline(cin, company);
-
     cout << "City: ";
     getline(cin, city);
 
@@ -313,11 +316,12 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     // Call add node function for secondary tree
     jobs2.insert(*newJob);
     // Call insert to Hash Table
-    //    hashTable.insertGoodHash(newJob->getID(), *newJob);
+    // hashTable.insertGoodHash(newJob->getID(), *newJob);
 }
 
 void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
 {
+    printHeader("Add Jobs With A File");
     string fileName = "";
     cout << "Enter the name of the txt file containing the job listings: ";
     getline(cin, fileName);
@@ -332,17 +336,19 @@ void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTabl
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
 {
     string choice = "";
-
+    
+    cout << endl;
     cout << "D - Delete a Job listing" << endl;
     cout << "O - Delete oldest Job listing" << endl;
+    cout << endl;
 
     cout << "Enter choice: ";
     getline(cin, choice);
 
 
-    if (choice == "J")
+    if (choice == "D")
         deleteJob(jobs, jobs2, hashTable);
-    else if (choice == "L")
+    else if (choice == "O")
         deleteOldestJob(jobs, jobs2, hashTable);
     else
     {
@@ -354,16 +360,16 @@ void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<in
 void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
 {
     string id = "";
-
-    cout << "Enter job id to delete: ";
-    getline(cin, id);
+    printHeader("Delete A Job By ID");
+    printHeader("TO BE IMPLEMENTED");
+    // cout << "Enter job id to delete: ";
+    // getline(cin, id);
 
     // TODO:
     // Delete in BST (Primary and Secondary)
     // Delete in Hash table
 
     // This could be inside if(deleteEntry(id)) where deleteEntry() returns boolean
-    cout << "Deleted successfully" << endl;
 }
 
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
@@ -371,7 +377,8 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     // TODO:
     // Delete in BST (Primary and Secondary)
     // Delete in Hash table
-    cout << "Oldest job deleted.";
+    printHeader("Delete Oldest Job");
+    printHeader("TO BE IMPLEMENTED");
 }
 
 void logout()
