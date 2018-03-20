@@ -152,7 +152,7 @@ void printIndentedItem(int depth, Job &job)
 // Prints a header
 void printHeader(string title)
 {
-    cout << "____________________________________________________________" << endl;
+    cout << "------------------------------------------------------------" << endl;
     cout << title << endl;
     cout << "------------------------------------------------------------" << endl;
 }
@@ -197,7 +197,7 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
             break;
         case 'I':
             printHeader("Tree As Indented List");
-            jobs2.printTree(printIndentedItem, 1);
+            jobs.printTree(printIndentedItem, 1);
             break;
         default:
             break;
