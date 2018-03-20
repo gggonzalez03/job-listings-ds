@@ -63,6 +63,8 @@ public:
     bool findSmallest(ItemType & returnedItem) const;
     // Find the largest node
     bool findLargest(ItemType & returnedItem) const;
+    // Find entries that match the search
+    bool getEntries(const ItemType & target, void visit(ItemType &)) const;
  
 };
 
@@ -97,7 +99,40 @@ bool BinarySearchTree<ItemType>::getEntry(const ItemType& anEntry, ItemType & re
         return true;
     }
     return false;
-}  
+}
+
+template<class ItemType>
+bool BinarySearchTree<ItemType>::getEntries(const ItemType & target, void callback(ItemType &)) const
+{
+    // TODO:
+    // Convert to arrays
+    BinaryNode<ItemType> *nodePtr = findNode(this->rootPtr, target);
+    
+    // Only try to set returnedItem IF nodePtr is not NULL
+    // Avoids bad access error
+    if (nodePtr != NULL)
+    {
+        ItemType result = nodePtr->getItem();
+        callback(result);
+        
+        nodePtr = nodePtr->getRightPtr();
+        
+        while (nodePtr)
+        {
+            nodePtr = findNode(nodePtr, target);
+            
+            // Avoid bad access
+            if (nodePtr)
+            {
+                result = nodePtr->getItem();
+                callback(result);
+            }
+            nodePtr = nodePtr->getRightPtr();
+        }
+        return true;
+    }
+    return false;
+}
 
 template<class ItemType>
 bool BinarySearchTree<ItemType>::findSmallest(ItemType & returnedItem) const
@@ -219,7 +254,7 @@ BinaryNode<ItemType>* BinarySearchTree<ItemType>::findNode(BinaryNode<ItemType>*
     if (compare(nodePtr->getItem(), target))
         return findNode(nodePtr->getLeftPtr(), target);
     else
-        if (compare(nodePtr->getItem(), target))
+        if (compare(target, nodePtr->getItem()))
             return findNode(nodePtr->getRightPtr(), target);
         else
             return nodePtr;
