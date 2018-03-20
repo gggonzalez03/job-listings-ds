@@ -54,6 +54,11 @@ void readJobsIntoArray(Job *jobs, string fileName);
 
 
 int main() {
+    
+    // Ask the user for un and pw until a valid combination is entered
+    while (!login()) { }
+    
+    // Only start assigning variable after successful login
     string choice;
 
     // Unsorted list
@@ -142,11 +147,13 @@ void printIndentedItem(int depth, Job &job)
 
 void displayMenu()
 {
+    cout << endl;
     cout << "D - Display Job Listings" << endl;
     cout << "S - Search Job Listings" << endl;
     cout << "A - Add Job Listings" << endl;
     cout << "R - Delete Job Listings" << endl;
     cout << "L - Logout" << endl;
+    cout << endl;
 }
 
 void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2)
@@ -348,8 +355,6 @@ void logout()
     return;
 }
 
-// TODO:
-// Doesnt return false
 bool login()
 {
     string un;
@@ -366,11 +371,8 @@ bool login()
     {
         return true;
     }
-    else
-    {
-        cout << "Please enter valid username and password." << endl;
-        login();
-    }
+    
+    cout << "Please enter valid username and password." << endl;
 
     return false;
 }
@@ -395,7 +397,6 @@ void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &jobs, string fileName)
 
     // TODO:
     // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
-    cout << "Reading file " << fileName << endl;
     Job *job = nullptr;
 
     while(infile >> id)
@@ -442,7 +443,6 @@ void readJobsIntoArray(Job *jobs, string fileName)
 
     // TODO:
     // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
-    cout << "Reading file " << fileName << endl;
     Job *job = nullptr;
     int index = 0;
 
@@ -477,7 +477,7 @@ int generateID(HashTable<int, Job> &hashTable) {
     //        newID = rand() % 2000 + 1000;
     //    }
     //    return newID;
-    return 0;
+    return newID;
 }
 // updated by Fawzan
 // Generates the current days date (Today)
