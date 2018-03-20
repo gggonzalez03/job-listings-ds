@@ -161,7 +161,11 @@ void BinaryTree<ItemType>::_printTree(void printIndentedItem(int, ItemType &), B
         _printTree(printIndentedItem, node->getRightPtr(), indentCount);
     }
     if (node->getLeftPtr() != NULL)
+    {
+        if (node->getRightPtr() == NULL)
+            indentCount++;
         _printTree(printIndentedItem, node->getLeftPtr(), indentCount);
+    }
 }
 
 

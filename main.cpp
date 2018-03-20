@@ -139,7 +139,7 @@ void printIndentedItem(int depth, Job &job)
     for (int i = 0; i < depth; i++) {
         cout << "   ";
     }
-
+    
     cout << depth << ". ";
     display(job);
     cout << endl;
