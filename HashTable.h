@@ -52,19 +52,21 @@ void HashTable<K,Itemtype>::setTableSize(int size) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::goodHash(K key) {
-  string first = key.substr(0,2);
-  string last = key.substr(2,2);
-  int firstSquare = stoi(first);
-  int secondSquare = stoi(last);
-  firstSquare *= firstSquare;
-  secondSquare *= secondSquare;
-  int index = ((firstSquare + secondSquare) / 3) % 53;
-  return index;
+  int length = 0;
+  int index = 0;
+  char ch[length];
+
+  strcpy(ch, key);
+  length = key.length();
+  for(int i = 0; i < length; i++) {
+    index += ch[i];
+  }
+  index = (index * index * index) % 53;
 }
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::badHash(K key) {
-    return 0;
+    return key % tableSize;
 }
 
 template<typename K, class Itemtype>
