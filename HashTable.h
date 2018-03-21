@@ -52,8 +52,8 @@ void HashTable<K,Itemtype>::setTableSize(int size) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::goodHash(K key) {
-  string first = k.substr(0,2);
-  string last = k.substr(2,2);
+  string first = key.substr(0,2);
+  string last = key.substr(2,2);
   int firstSquare = stoi(first);
   int secondSquare = stoi(last);
   firstSquare *= firstSquare;
