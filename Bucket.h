@@ -1,26 +1,33 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
-const int SIZE = 4;
-
 template<class Itemtype>
 class Bucket {
 private:
   Itemtype *items;
   int count;
+    int size;
 public:
-  Bucket();
+    Bucket();
+  Bucket(int);
   ~Bucket();
   int getCount();
   Itemtype * searchBucketArray(Itemtype &);
   bool insertBucketArray(Itemtype &);
   bool removeBucketArray(Itemtype &);
+    void setSize(int);
 };
 
 template<class Itemtype>
 Bucket<Itemtype>::Bucket() {
-    items = new Itemtype[SIZE];
     count = 0;
+}
+
+template<class Itemtype>
+Bucket<Itemtype>::Bucket(int s) {
+    items = new Itemtype[s];
+    count = 0;
+    size = s;
 }
 
 template<class Itemtype>
@@ -35,9 +42,9 @@ int Bucket<Itemtype>::getCount() {
 
 template<class Itemtype>
 Itemtype * Bucket<Itemtype>::searchBucketArray(Itemtype &it) {
-  for(int i = 0; i < SIZE; i++) {
+  for(int i = 0; i < size; i++) {
     if(items[i] == it) {
-      return it;
+      return &it;
     }
   }
   return NULL;
@@ -45,8 +52,8 @@ Itemtype * Bucket<Itemtype>::searchBucketArray(Itemtype &it) {
 
 template<class Itemtype>
 bool Bucket<Itemtype>::insertBucketArray(Itemtype &it) {
-  for(int i = 0; i < SIZE; i++) {
-    if(items[i] == NULL) {
+  for(int i = 0; i < size; i++) {
+    if((items + i) == NULL) {
       items[i] = it;
       count++;
       return true;
@@ -57,7 +64,7 @@ bool Bucket<Itemtype>::insertBucketArray(Itemtype &it) {
 
 template<class Itemtype>
 bool Bucket<Itemtype>::removeBucketArray(Itemtype &it) {
-  for(int i = 0; i < SIZE; i++) {
+  for(int i = 0; i < size; i++) {
     if(items[i] == it) {
       delete items[i];
       count--;
@@ -65,6 +72,13 @@ bool Bucket<Itemtype>::removeBucketArray(Itemtype &it) {
     }
   }
   return false;
+}
+
+template<class Itemtype>
+void Bucket<Itemtype>::setSize(int s)
+{
+    size = s;
+    items = new Itemtype[s];
 }
 
 #endif
