@@ -59,7 +59,7 @@ int HashTable<K,Itemtype>::goodHash(K key) {
   char ch[length];
 
   strcpy(ch, key.c_str());
-  length = key.length();
+  length = (int)(key.length());
   for(int i = 0; i < length; i++) {
     index += ch[i];
   }
@@ -69,7 +69,7 @@ int HashTable<K,Itemtype>::goodHash(K key) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::badHash(K key) {
-    return key % tableSize;
+    return stoi(key) % tableSize;
 }
 
 template<typename K, class Itemtype>

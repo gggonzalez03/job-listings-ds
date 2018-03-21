@@ -484,7 +484,7 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
         job = new Job(id, title, company, date, city);
 
         // Insert the object
-        hashTable->insertGoodHash(id, *job);
+        hashTable->insertBadHash(id, *job);
     }
 
     infile.close();
