@@ -4,6 +4,8 @@
 
 #include "Bucket.h"
 
+using std::string;
+
 template<typename K, class Itemtype>
 class HashTable {
 private:
