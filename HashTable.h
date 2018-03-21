@@ -2,6 +2,124 @@
 #ifndef HASH_TABLE
 #define HASH_TABLE
 
+#include "Bucket.h"
+
+template<typename K, class Itemtype>
+class HashTable {
+private:
+  Bucket<Itemtype> *bucket;
+  double loadFactor;
+  int collisionCount;
+  int numOfItems;
+  int tableSize;
+public:
+  HashTable();
+  ~HashTable();
+  void setTableSize(int);
+  int goodHash(K);
+  int badHash(K);
+  Itemtype searchTable(K,Itemtype);
+  bool insertGoodHash(K, Itemtype);
+  bool insertBadHash(K, Itemtype);
+  bool remove(K,Itemtype);
+};
+
+template<typename K, class Itemtype>
+HashTable<K,Itemtype>::HashTable() {
+  bucket = new Bucket<Itemtype>[tableSize];
+  loadFactor = 0.0;
+  collisionCount = 0;
+  numOfItems = 0;
+}
+
+template<typename K, class Itemtype>
+HashTable<K,Itemtype>::~HashTable() {
+  for(int i = 0; i < tableSize; i++) {
+    if(bucket[i] != NULL) {
+      delete bucket[i];
+    }
+  }
+  delete[] bucket;
+}
+
+template<typename K, class Itemtype>
+void HashTable<K,Itemtype>::setTableSize(int size) {
+  tableSize = size;
+}
+
+template<typename K, class Itemtype>
+int HashTable<K,Itemtype>::goodHash(K key) {
+
+}
+
+template<typename K, class Itemtype>
+int HashTable<K,Itemtype>::badHash(K key) {
+
+}
+
+template<typename K, class Itemtype>
+Itemtype HashTable<K,Itemtype>::searchTable(K key, Itemtype item) {
+  int hashedIndex = goodHash(key);
+  Itemtype temp = bucket[hashedIndex].searchBucketArray(item);
+  if(temp) {
+    return temp;
+  }
+  // search overflow
+  return NULL;
+}
+
+template<typename K, class Itemtype>
+bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype item) {
+  int hashedIndex = goodHash(key);
+  if(bucket[hashedIndex].getCount() == 0) {
+    bucket[hashedIndex].insertBucketArray(item);
+    numOfItems++;
+    return true;
+  } else if(bucket[hashedIndex].getCount() > 0) {
+    bucket[hashedIndex].insertBucketArray(item);
+    collisionCount++;
+    return true;
+  } else {
+    // insert into overflow structure
+  }
+  return false;
+}
+
+template<typename K, class Itemtype>
+bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype item) {
+  int hashedIndex = badHash(key);
+  if(bucket[hashedIndex].getCount() == 0) {
+    bucket[hashedIndex].insertBucketArray(item);
+    numOfItems++;
+    return true;
+  } else if(bucket[hashedIndex].getCount() > 0) {
+    bucket[hashedIndex].insertBucketArray(item);
+    collisionCount++;
+    return true;
+  } else {
+    // insert into overflow structure
+  }
+  return false;
+}
+
+template<typename K, class Itemtype>
+bool HashTable<K,Itemtype>::remove(K key, Itemtype item) {
+  int hashedIndex = goodHash(key);
+  if(bucket[hashedIndex].searchBucketArray(item) != NULL) {
+    if(bucket[hashedIndex].getCount() > 0) {
+      bucket[hashedIndex].removeBucketArray(item);
+      collisionCount--;
+      return true;
+    }
+    bucket[hashedIndex].removeBucketArray(item);
+    numOfItems--;
+  } else {
+    // insert into overflow structure
+  }
+}
+
+#endif
+/*
 #include "HashEntry.h"
 
 const int TABLE_SIZE = 150;
@@ -10,7 +128,7 @@ template<typename K, typename V>
 class HashTable {
 private:
     // HashEntry array
-    HashEntry<K,V> *arr;
+    Bucket<Itemtype> *bucket;
     double loadFactor;
     int collisionCount;
     int numOfElements;
@@ -30,7 +148,7 @@ public:
 
 template<typename K, typename V>
 HashTable<K,V>::HashTable() {
-    arr = new HashEntry<K,V>[TABLE_SIZE];
+    bucket = new Bucket<Itemtype>[TABLE_SIZE];
     loadFactor = 0.0;
     collisionCount = 0;
     numOfElements = 0;
@@ -145,4 +263,4 @@ V HashTable<K,V>::remove(K key) {
 }
 
 #endif
-
+*/
