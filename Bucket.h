@@ -20,6 +20,7 @@ public:
 
 template<class Itemtype>
 Bucket<Itemtype>::Bucket() {
+
     count = 0;
 }
 
@@ -28,6 +29,7 @@ Bucket<Itemtype>::Bucket(int s) {
     items = new Itemtype[s];
     count = 0;
     size = s;
+
 }
 
 template<class Itemtype>
@@ -45,6 +47,7 @@ Itemtype * Bucket<Itemtype>::searchBucketArray(Itemtype &it) {
   for(int i = 0; i < size; i++) {
     if(items[i] == it) {
       return &it;
+
     }
   }
   return NULL;
@@ -80,7 +83,6 @@ void Bucket<Itemtype>::setSize(int s)
     size = s;
     items = new Itemtype[s];
 }
-
 #endif
 /*
 const int BUCKET_SIZE = 3;
