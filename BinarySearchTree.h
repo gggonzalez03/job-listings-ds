@@ -65,6 +65,8 @@ public:
     bool findLargest(ItemType & returnedItem) const;
     // Find entries that match the search
     bool getEntries(const ItemType & target, void visit(ItemType &)) const;
+    // Deletes an item based on a non unique id
+    bool removeByNonUniqueID(ItemType & target);
  
 };
 
@@ -85,7 +87,30 @@ bool BinarySearchTree<ItemType>::remove(const ItemType & target)
 	bool isSuccessful = false;
 	this->rootPtr = _remove(this->rootPtr, target, isSuccessful);
 	return isSuccessful; 
-}  
+}
+
+template <class ItemType>
+bool BinarySearchTree<ItemType>::removeByNonUniqueID(ItemType & target)
+{
+    BinaryNode<ItemType> *node = findNode(this->rootPtr, target);
+    while(node != NULL)
+    {
+        if (target == node->getItem())
+        {
+            deleteNode(node);
+            return true;
+        }
+        
+        node = node->getRightPtr();
+        
+        // This makes sure that the way the tree is checked is aligned to the compare function passed in
+        if (compare(this->rootPtr->getLeftPtr()->getItem(), this->rootPtr->getRightPtr()->getItem()))
+            node = node->getLeftPtr();
+        
+        node = findNode(node, target);
+    }
+    return false;
+}
 
 template<class ItemType>
 bool BinarySearchTree<ItemType>::getEntry(const ItemType& anEntry, ItemType & returnedItem) const

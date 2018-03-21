@@ -369,6 +369,10 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
     job->setID(stoi(id));
     
     jobs.remove(*job);
+    
+    // TODO:
+    // Return the whole object from the hash table when it's deleted there
+    // Then, use that object to pass in jobs2.removeByNonUniqueID(jobobjecthere)
 
     // TODO:
     // Delete in BST (Primary and Secondary)
