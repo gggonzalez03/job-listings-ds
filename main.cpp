@@ -389,7 +389,7 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     // hashTable.remove(*oldestJob->getID(), *oldestJob);
 }
 
-void logout(HashTable<int, Job> &hashTable)
+void logout(HashTable<string, Job> &hashTable)
 {
     // TODO:
     // Write data from the hash table
@@ -490,7 +490,7 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
     infile.close();
 }
 
-void writeFile(HashTable<int, Job> &hashTable, string fileName)
+void writeFile(HashTable<string, Job> &hashTable, string fileName)
 {
     ofstream ofs;
 
