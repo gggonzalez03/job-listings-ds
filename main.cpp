@@ -49,7 +49,7 @@ void printIndentedItem(int depth, Job &job);
 int generateID(HashTable<int, Job> &hashTable);
 int getTodaysDate();
 
-void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &, BinarySearchTree<Job> &, HashTable<int, Job> *, string fileName);
+void readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, HashTable<int, Job> *, string fileName);
 
 // Simple helper functions
 void printHeader(string title);
@@ -72,7 +72,7 @@ int main() {
     HashTable<int, Job> *hashTable;
 
     // read the jobs into the trees
-    readJobsIntoBinarySearchTree(*jobs, *jobs2, hashTable, "jobs.txt");
+    readFile(*jobs, *jobs2, hashTable, "jobs.txt");
 
     while (*choice.c_str() != 'L')
     {
@@ -281,13 +281,6 @@ void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<in
 // updated by Fawzan
 void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> &hashTable)
 {
-    //    string entry = "";
-    //    cout << "Enter job information (ex. Title Company City): ";
-    //    getline(cin, entry);
-
-    // TODO:
-    // Take the input and concatenate such that these
-    // variables are set appropriately
     printHeader("Add A Job");
     string title = "";
     string company = "";
@@ -325,7 +318,7 @@ void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTabl
     cout << "Enter the name of the txt file containing the job listings: ";
     getline(cin, fileName);
 
-    readJobsIntoBinarySearchTree(jobs, jobs2, &hashTable, fileName);
+    readFile(jobs, jobs2, &hashTable, fileName);
 
     // TODO:
     // Add to hash table
@@ -386,6 +379,13 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     // Delete in Hash table
     printHeader("Delete Oldest Job");
     printHeader("TO BE IMPLEMENTED");
+    
+    Job *oldestJob = new Job();
+    jobs2.findSmallest(*oldestJob);
+    jobs.remove(*oldestJob);
+    jobs2.remove(*oldestJob);
+    
+    // hashTable.remove(*oldestJob->getID(), *oldestJob);
 }
 
 void logout()
@@ -417,7 +417,7 @@ bool login()
     return false;
 }
 
-void readJobsIntoBinarySearchTree(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> *hashTable, string fileName)
+void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<int, Job> *hashTable, string fileName)
 {
 
     string title = "";
