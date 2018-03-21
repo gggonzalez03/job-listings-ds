@@ -52,7 +52,14 @@ void HashTable<K,Itemtype>::setTableSize(int size) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::goodHash(K key) {
-    return 0;
+  string first = k.substr(0,2);
+  string last = k.substr(2,2);
+  int firstSquare = stoi(first);
+  int secondSquare = stoi(last);
+  firstSquare *= firstSquare;
+  secondSquare *= secondSquare;
+  int index = ((firstSquare + secondSquare) / 3) % 53;
+  return index;
 }
 
 template<typename K, class Itemtype>
@@ -125,9 +132,9 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
 #endif
 /*
  #include "HashEntry.h"
- 
+
  const int TABLE_SIZE = 150;
- 
+
  template<typename K, typename V>
  class HashTable {
  private:
@@ -149,7 +156,7 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  void insertBadHash(K,V);
  V remove(K);
  };
- 
+
  template<typename K, typename V>
  HashTable<K,V>::HashTable() {
  bucket = new Bucket<Itemtype>[TABLE_SIZE];
@@ -157,7 +164,7 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  collisionCount = 0;
  numOfElements = 0;
  }
- 
+
  template<typename K, typename V>
  HashTable<K,V>::~HashTable() {
  for(int i = 0; i < TABLE_SIZE; i++) {
@@ -167,19 +174,19 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  }
  delete[] arr;
  }
- 
+
  // Hash function that has minimum collisions
  template<typename K, typename V>
  int HashTable<K,V>::goodHash(K key) {
  return 0;
  }
- 
+
  // Basic Hash function that may have many collisions
  template<typename K, typename V>
  int HashTable<K,V>::badHash(K key) {
  return 0;
  }
- 
+
  // Searches HashTable based on the key, hashes key value to get the index
  template<typename K,typename V>
  V HashTable<K,V>::searchTable(K key) {
@@ -193,7 +200,7 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  }
  return NULL;
  }
- 
+
  // Inserts into HashTable using goodHash()
  template<typename K, typename V>
  void HashTable<K,V>::insertGoodHash(K key, V value) {
@@ -219,8 +226,8 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  //collisionCount++;
  }
  }
- 
- 
+
+
  // Inserts into HashTable using badHash()
  template<typename K, typename V>
  void HashTable<K,V>::insertBadHash(K key, V value) {
@@ -245,7 +252,7 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  //collisionCount++;
  }
  }
- 
+
  // Removes the key-value pair at the hashed index
  template<typename K, typename V>
  V HashTable<K,V>::remove(K key) {
@@ -265,6 +272,6 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
  }
  return NULL;
  }
- 
+
  #endif
  */
