@@ -1,6 +1,83 @@
 #ifndef BUCKET_H
 #define BUCKET_H
 
+const int SIZE = 4;
+
+template<class Itemtype>
+class Bucket {
+private:
+  Itemtype *items;
+  int count;
+public:
+  Bucket();
+  ~Bucket();
+  int getCount();
+  Itemtype searchBucketArray(Itemtype);
+  bool insertBucketArray(Itemtype);
+  bool removeBucketArray(Itemtype);
+};
+
+template<class Itemtype>
+Bucket<Itemtype>::Bucket() {
+  items = new Itemtype[SIZE];
+  // check back later
+  for(int i = 0; i < SIZE; i++) {
+    items[i] = NULL;
+  }
+  count = 0;
+}
+
+template<class Itemtype>
+Bucket<Itemtype>::~Bucket() {
+  for(int i = 0; i < SIZE; i++) {
+    if(items[i] != NULL) {
+      delete items[i];
+    }
+  }
+  delete[] items;
+}
+
+template<class Itemtype>
+int Bucket<Itemtype>::getCount() {
+  return count;
+}
+
+template<class Itemtype>
+Itemtype Bucket<Itemtype>::searchBucketArray(Itemtype it) {
+  for(int i = 0; i < SIZE; i++) {
+    if(items[i] == it) {
+      return it;
+    }
+  }
+  return NULL;
+}
+
+template<class Itemtype>
+bool Bucket<Itemtype>::insertBucketArray(Itemtype it) {
+  for(int i = 0; i < SIZE; i++) {
+    if(items[i] == NULL) {
+      items[i] = it;
+      count++;
+      return true;
+    }
+  }
+  return false;
+}
+
+template<class Itemtype>
+bool Bucket<Itemtype>::removeBucketArray(Itemtype it) {
+  for(int i = 0; i < SIZE; i++) {
+    if(items[i] == it) {
+      delete items[i];
+      count--;
+      return true;
+    }
+  }
+  return false;
+}
+
+#endif
+/*
 const int BUCKET_SIZE = 3;
 
 
@@ -130,3 +207,4 @@ bool Bucket<K,V>::removeBucketArray(K key) {
 }
 
 #endif
+*/
