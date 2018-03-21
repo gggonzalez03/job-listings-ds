@@ -61,6 +61,18 @@ public:
         location = job.location;
     }
     
+    bool operator == (const Job &job ) {
+        if (name != job.name || id != job.id || date != job.date || location != job.location)
+            return false;
+        return true;
+    }
+    
+    bool operator != (const Job &job ) {
+        if (name != job.name || id != job.id || date != job.date || location != job.location)
+            return true;
+        return false;
+    }
+    
     bool operator < (const Job& job) const {
         if(id < job.id)
             return true;
