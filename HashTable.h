@@ -58,12 +58,13 @@ int HashTable<K,Itemtype>::goodHash(K key) {
   int index = 0;
   char ch[length];
 
-  strcpy(ch, key);
+  strcpy(ch, key.c_str());
   length = key.length();
   for(int i = 0; i < length; i++) {
     index += ch[i];
   }
   index = (index * index * index) % 53;
+  return index;
 }
 
 template<typename K, class Itemtype>
