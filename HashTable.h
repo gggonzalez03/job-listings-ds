@@ -18,7 +18,7 @@ public:
   void setTableSize(int);
   int goodHash(K);
   int badHash(K);
-  Itemtype searchTable(K,Itemtype);
+  Itemtype * searchTable(K, Itemtype);
   bool insertGoodHash(K, Itemtype);
   bool insertBadHash(K, Itemtype);
   bool remove(K,Itemtype);
@@ -49,18 +49,18 @@ void HashTable<K,Itemtype>::setTableSize(int size) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::goodHash(K key) {
-
+    return 0;
 }
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::badHash(K key) {
-
+    return 0;
 }
 
 template<typename K, class Itemtype>
-Itemtype HashTable<K,Itemtype>::searchTable(K key, Itemtype item) {
+Itemtype * HashTable<K,Itemtype>::searchTable(K key, Itemtype item) {
   int hashedIndex = goodHash(key);
-  Itemtype temp = bucket[hashedIndex].searchBucketArray(item);
+  Itemtype *temp = bucket[hashedIndex].searchBucketArray(item);
   if(temp) {
     return temp;
   }

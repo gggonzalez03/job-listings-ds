@@ -233,9 +233,10 @@ void searchById(HashTable<int, Job> &hashTable)
 
     cout << "Enter 5 digit ID (ex. 12423): ";
     getline(cin, id);
-
-    printHeader("Search by ID Result");
-    printHeader("TO BE IMPLEMENTED");
+    
+    Job *job = new Job();
+    job->setID(stoi(id));
+    job = hashTable.searchTable(stoi(id), *job);
 }
 // updated by Fawzan
 void searchByDate(BinarySearchTree<Job> &jobs2)
