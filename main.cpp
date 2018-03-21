@@ -50,6 +50,7 @@ int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
 
 void readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, HashTable<string, Job> *, string fileName);
+void writeFile(HashTable<string, Job> &, string);
 
 // Simple helper functions
 void printHeader(string title);
@@ -388,10 +389,11 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     // hashTable.remove(*oldestJob->getID(), *oldestJob);
 }
 
-void logout()
+void logout(HashTable<int, Job> &hashTable)
 {
     // TODO:
     // Write data from the hash table
+    writeFile(hashTable, "updatedJobs.txt");
     return;
 }
 
@@ -486,6 +488,28 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
     }
 
     infile.close();
+}
+
+void writeFile(HashTable<int, Job> &hashTable, string fileName)
+{
+    ofstream ofs;
+
+    // trunc allows the file to rewritten instead of appending in it
+    ofs.open (fileName, ofstream::out | ofstream::trunc);
+
+    if(ofs.fail())
+    {
+        cout << "Error saving to file " << fileName;
+        exit(111);
+    }
+
+//    // Call these in the hast table loop
+//    ofs << "" << table[i].getID();
+//    ofs << "; " << table[i].getName();
+//    ofs << "; " << table[i].getCity();
+//    ofs << "; " << table[i].getDate();
+
+    ofs.close();
 }
 
 // updated by Fawzan
