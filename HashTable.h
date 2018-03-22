@@ -28,6 +28,7 @@ public:
     bool insertBadHash(K, Itemtype &);
     bool remove(K,Itemtype &);
     void traverseTable(void callback(ofstream &, Itemtype &), ofstream &);
+    void printTable(void callback(Itemtype &));
     double getLoadFactor() const;
 };
 
@@ -184,6 +185,16 @@ void HashTable<K,Itemtype>::traverseTable(void callback(ofstream &, Itemtype &),
     {
         if (buckets[i].getCount())
             buckets[i].traverseBucket(callback, ofs);
+    }
+}
+
+template<typename K, class Itemtype>
+void HashTable<K,Itemtype>::printTable(void callback(Itemtype &))
+{
+    for (int i = 0; i < tableSize; i++)
+    {
+        if (buckets[i].getCount())
+            buckets[i].printBucket(callback);
     }
 }
 

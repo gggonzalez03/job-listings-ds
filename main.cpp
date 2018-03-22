@@ -28,7 +28,7 @@ const string password = "12345";
 // Add parameters to functions such that they accomodate both primary and secondary trees and the hash table
 bool login();
 void displayMenu();
-void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2);
+void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &);
 void search(BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls searchById() and searchByDate()
 void searchById(HashTable<string, Job> &hashTable); // Hash table
 void searchByDate(BinarySearchTree<Job> &jobs2); // Secondary tree
@@ -107,7 +107,7 @@ int main() {
         switch(*choice.c_str())
         {
             case 'D':
-                displayJobListings(*jobs, *jobs2);
+                displayJobListings(*jobs, *jobs2, *hashTable);
                 break;
             case 'S':
                 search(*jobs2, *hashTable);
@@ -186,7 +186,7 @@ void displayMenu()
     cout << endl;
 }
 
-void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2)
+void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
 {
     string choice = "";
     cout << endl;
@@ -201,9 +201,8 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
 
     switch (*choice.c_str()) {
         case 'U':
-            //            printUnsorted();
             printHeader("Unsorted Jobs List");
-            printHeader("TO BE IMPLEMENTED");
+            hashTable.printTable(display);
             break;
         case 'P':
             printHeader("Sorted by ID");
