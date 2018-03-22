@@ -39,13 +39,14 @@ void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTabl
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls deleteJob() and deleteOldestJob()
 void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
-void logout();
+void logout(HashTable<string, Job> &);
 
 // display function to pass to BST traverse functions
 void display(Job &anItem);
 bool compareID(const Job &, const Job &);
 bool compareDate(const Job &, const Job &);
 void printIndentedItem(int depth, Job &job);
+void printAndSave(ofstream&, Job&);
 
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
@@ -116,6 +117,9 @@ int main() {
                 break;
             case 'R':
                 del(*jobs, *jobs2, *hashTable);
+                break;
+            case 'L':
+                logout(*hashTable);
                 break;
             default:
                 break;
@@ -287,7 +291,6 @@ void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<st
 
     cout << endl;
     cout << "J - Add single entry" << endl;
-    cout << "F - Add listings using a file" << endl;
     cout << endl;
 
     cout << "Enter choice: ";
@@ -484,6 +487,13 @@ int readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, Queue<Jo
     return itemsCount;
 }
 
+void printAndSave(ofstream &ofs, Job &job)
+{
+    cout << job << endl;
+    ofs << job;
+    ofs << endl;
+}
+
 void writeFile(HashTable<string, Job> &hashTable, string fileName)
 {
     ofstream ofs;
@@ -496,12 +506,9 @@ void writeFile(HashTable<string, Job> &hashTable, string fileName)
         cout << "Error saving to file " << fileName;
         exit(111);
     }
-
-//    // Call these in the hast table loop
-//    ofs << "" << table[i].getID();
-//    ofs << "; " << table[i].getName();
-//    ofs << "; " << table[i].getCity();
-//    ofs << "; " << table[i].getDate();
+    
+    printHeader("Hash Table Items");
+    hashTable.traverseTable(printAndSave, ofs);
 
     ofs.close();
 }

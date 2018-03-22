@@ -16,6 +16,7 @@ public:
   bool insertBucketArray(Itemtype &);
   bool removeBucketArray(Itemtype &);
     void setSize(int);
+    void traverseBucket(void callback(ofstream &, Itemtype &), ofstream &);
 };
 
 template<class Itemtype>
@@ -96,6 +97,16 @@ void Bucket<Itemtype>::setSize(int s)
 {
     size = s;
     items = new Itemtype[s];
+}
+
+template<class Itemtype>
+void Bucket<Itemtype>::traverseBucket(void callback(ofstream &, Itemtype &), ofstream & ofs)
+{
+    Itemtype * temp = new Itemtype();
+    if (size)
+        for (int i = 0; i < size; i++)
+            if (items[i] != *temp)
+                callback(ofs, items[i]);
 }
 
 #endif
