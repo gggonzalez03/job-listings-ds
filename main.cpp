@@ -538,9 +538,9 @@ int generateID(HashTable<string, Job> &hashTable) {
         temp->setID(to_string(newID));
         cout << !hashTable.searchTable(temp->getID(), *temp) << " " << newID << endl;
     }
-    return newID;
     
     delete temp;
+    return newID;
 }
 // updated by Fawzan
 // Generates the current days date (Today)
