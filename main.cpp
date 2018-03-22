@@ -282,7 +282,6 @@ void searchByDate(BinarySearchTree<Job> &jobs2)
 
     printHeader("Search by Date Results");
     jobs2.getEntries(*job, display);
-    cout << endl;
     
     delete job;
 }
@@ -418,6 +417,11 @@ void logout(HashTable<string, Job> &hashTable)
     // TODO:
     // Write data from the hash table
     writeFile(hashTable, "updatedJobs.txt");
+    
+    // print statistics
+    printHeader("Load Factor");
+    cout << "Hash table load factor: " << hashTable.getLoadFactor() * 100 << "%" << endl;
+    cout << endl;
     return;
 }
 
