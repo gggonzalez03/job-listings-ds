@@ -9,6 +9,7 @@
 #ifndef Job_h
 #define Job_h
 using std::string;
+using std::ostream;
 
 class Job
 {
@@ -58,17 +59,18 @@ public:
         name = job.name;
         id = job.id;
         date = job.date;
+        company = job.company;
         location = job.location;
     }
 
     bool operator == (const Job &job ) {
-        if (name != job.name || id != job.id || date != job.date || location != job.location)
+        if (id != job.id)
             return false;
         return true;
     }
 
     bool operator != (const Job &job ) {
-        if (name != job.name || id != job.id || date != job.date || location != job.location)
+        if (id != job.id)
             return true;
         return false;
     }
@@ -83,6 +85,11 @@ public:
         if(id > job.id)
             return true;
         return false;
+    }
+    
+    friend ostream& operator<<(ostream& s, const Job& j) {
+        s << j.getID() << " " << j.getName() << " " << j.getCompany() << " " << j.getLocation() << " " << j.getDate();
+        return s;
     }
 };
 
