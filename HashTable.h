@@ -16,6 +16,7 @@ private:
     int tableSize;
     int bucketSize;
 public:
+    HashTable();
     HashTable(int, int);
     ~HashTable();
     void setTableSize(int);
@@ -27,6 +28,17 @@ public:
     bool remove(K,Itemtype &);
 };
 
+
+template<typename K, class Itemtype>
+HashTable<K,Itemtype>::HashTable() {
+    buckets = new Bucket<Itemtype>[0];
+    loadFactor = 0.0;
+    collisionCount = 0;
+    numOfItems = 0;
+    tableSize = 0;
+    bucketSize = 0;
+}
+
 template<typename K, class Itemtype>
 HashTable<K,Itemtype>::HashTable(int ts, int bs) {
     buckets = new Bucket<Itemtype>[ts];
@@ -34,7 +46,7 @@ HashTable<K,Itemtype>::HashTable(int ts, int bs) {
     collisionCount = 0;
     numOfItems = 0;
     tableSize = ts;
-    bucketSize = bs + 1;
+    bucketSize = bs;
 }
 
 template<typename K, class Itemtype>
@@ -75,16 +87,22 @@ int HashTable<K,Itemtype>::badHash(K key) {
 template<typename K, class Itemtype>
 Itemtype * HashTable<K,Itemtype>::searchTable(K key, Itemtype &item) {
     int hashedIndex = goodHash(key);
-    Itemtype *temp = buckets[hashedIndex].searchBucketArray(item);
-    if(temp) {
+    
+    if (buckets != NULL)
+    {
+        Itemtype *temp = buckets[hashedIndex].searchBucketArray(item);
         return temp;
+        // search overflow
     }
-    // search overflow
     return NULL;
 }
 
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
+    
+    if (buckets == NULL)
+        return false;
+    
     int hashedIndex = goodHash(key);
     if(buckets[hashedIndex].getCount() == 0) {
         buckets[hashedIndex].setSize(bucketSize);
@@ -104,17 +122,20 @@ bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
     int hashedIndex = badHash(key);
+    
+    if (buckets == NULL)
+        return false;
+    
     if(buckets[hashedIndex].getCount() == 0) {
-        buckets[hashedIndex].insertBucketArray(item);
         numOfItems++;
-        return true;
-    } else if(buckets[hashedIndex].getCount() > 0) {
-        buckets[hashedIndex].insertBucketArray(item);
-        collisionCount++;
-        return true;
+        return buckets[hashedIndex].insertBucketArray(item);
     } else {
-        // insert into overflow structure
+        collisionCount++;
+        return buckets[hashedIndex].insertBucketArray(item);
     }
+    
+    // insert into overflow structure
+    
     return false;
 }
 

@@ -49,7 +49,7 @@ void printIndentedItem(int depth, Job &job);
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
 
-void readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, HashTable<string, Job> *, string fileName);
+void readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, HashTable<string, Job> &, string fileName);
 void writeFile(HashTable<string, Job> &, string);
 
 // Simple helper functions
@@ -70,10 +70,10 @@ int main() {
     BinarySearchTree<Job> *jobs2 = new BinarySearchTree<Job>(compareDate);
 
     // The hash table for the primary tree
-    HashTable<string, Job> *hashTable;
+    HashTable<string, Job> *hashTable = new HashTable<string, Job>();
 
     // read the jobs into the trees
-    readFile(*jobs, *jobs2, hashTable, "jobs.txt");
+    readFile(*jobs, *jobs2, *hashTable, "jobs.txt");
 
     while (*choice.c_str() != 'L')
     {
@@ -229,13 +229,14 @@ void searchById(HashTable<string, Job> &hashTable)
 
     // TODO:
     // This won't work until items are inserted in the hash table
-//    Job *job = new Job();
-//    job->setID(stoi(id));
-//
-//    job = hashTable.searchTable(stoi(id), *job);
-//
-//    printHeader("Search By ID");
-//    display(*job);
+    Job *job = new Job();
+    job->setID(id);
+
+    job = hashTable.searchTable(id, *job);
+
+    printHeader("Search By ID");
+
+    display(*job);
 }
 // updated by Fawzan
 void searchByDate(BinarySearchTree<Job> &jobs2)
@@ -319,7 +320,7 @@ void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTabl
     cout << "Enter the name of the txt file containing the job listings: ";
     getline(cin, fileName);
 
-    readFile(jobs, jobs2, &hashTable, fileName);
+    readFile(jobs, jobs2, hashTable, fileName);
 
     // TODO:
     // Add to hash table
@@ -419,7 +420,7 @@ bool login()
     return false;
 }
 
-void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> *hashTable, string fileName)
+void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable, string fileName)
 {
 
     string title = "";
@@ -467,7 +468,7 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
 
     infile.open(fileName);
 
-    hashTable = new HashTable<string, Job>(itemsCount, 3);
+    hashTable.setTableSize(itemsCount);
 
     while(infile >> id)
     {
@@ -484,7 +485,8 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
         job = new Job(id, title, company, date, city);
 
         // Insert the object
-        hashTable->insertBadHash(id, *job);
+        
+        cout << hashTable.insertBadHash(id, *job) << endl;
     }
 
     infile.close();
