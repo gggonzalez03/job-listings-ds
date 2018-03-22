@@ -38,10 +38,6 @@ HashTable<K,Itemtype>::HashTable() {
     numOfItems = 0;
     tableSize = 0;
     bucketSize = 0;
-    for (int i = 0; i < tableSize; i++)
-    {
-        buckets[i] = new Bucket<Itemtype>(0);
-    }
 }
 
 template<typename K, class Itemtype>
@@ -53,6 +49,7 @@ HashTable<K,Itemtype>::HashTable(int ts, int bs) {
     tableSize = ts;
     bucketSize = bs;
     
+    // Initialize the buckets in the array so that they can actually store data
     for (int i = 0; i < tableSize; i++)
     {
         buckets[i] = *new Bucket<Itemtype>(bs);

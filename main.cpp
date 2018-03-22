@@ -16,6 +16,7 @@
 #include "Job.h"
 #include "BinarySearchTree.h"
 #include "HashTable.h"
+#include "Queue.h"
 using namespace std;
 
 
@@ -49,7 +50,7 @@ void printIndentedItem(int depth, Job &job);
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
 
-void readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, HashTable<string, Job> &, string fileName);
+int readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, Queue<Job> &, string fileName);
 void writeFile(HashTable<string, Job> &, string);
 
 // Simple helper functions
@@ -69,12 +70,32 @@ int main() {
     // List of jobs that is based on the secondary key (date)
     BinarySearchTree<Job> *jobs2 = new BinarySearchTree<Job>(compareDate);
 
-    // The hash table for the primary tree
-    HashTable<string, Job> *hashTable = new HashTable<string, Job>(53, 4);
-
+    // Queue that will be used to save the entries in the order they were added
+    // This will be used to insert items to the hash table without re opening the input file
+    Queue<Job> *jobQueue = new Queue<Job>();
+    
     // read the jobs into the trees
-    readFile(*jobs, *jobs2, *hashTable, "jobs.txt");
+    // And also fill up the queue and return the itemsCount
+    int itemCount = readFile(*jobs, *jobs2, *jobQueue, "jobs.txt");
+    
+    // The hash table for the primary tree
+    // TODO:
+    // GetNextPrime of the itemCount and assign it as the table size
+    HashTable<string, Job> *hashTable = new HashTable<string, Job>(itemCount * 2 + 3, 4);
+    
+    
+    // Insert the items from the queue to the hash table
+    Job *job = new Job();
+    while (!jobQueue->isEmpty())
+    {
+        jobQueue->dequeue(*job);
+        hashTable->insertBadHash(job->getID(), *job);
+    }
+    
+    delete job;
+    delete jobQueue;
 
+    // Start the asking the user for choices of operations
     while (*choice.c_str() != 'L')
     {
         displayMenu();
@@ -408,7 +429,7 @@ bool login()
     return false;
 }
 
-void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable, string fileName)
+int readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, Queue<Job> &queue, string fileName)
 {
 
     string title = "";
@@ -447,37 +468,20 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
 
         // Insert the object
         jobs.insert(*job);
+        
         // Insert in secondary tree (sorted by date)
         jobs2.insert(*job);
         
-        hashTable.insertBadHash(job->getID(), *job);
-
+        // Insert in the queue
+        queue.enqueue(*job);
+        
         itemsCount++;
     }
     infile.close();
-
-    infile.open(fileName);
-
-    while(infile >> id)
-    {
-        infile.ignore();
-        getline(infile, title, ';');
-        infile.ignore();
-        getline(infile, company, ';');
-        infile.ignore();
-        getline(infile, city, ';');
-        infile.ignore();
-        infile >> date;
-
-        // Create a Job object
-        job = new Job(id, title, company, date, city);
-
-        // Insert the object
-        
-        hashTable.insertBadHash(id, *job);
-    }
-
-    infile.close();
+    
+    delete job;
+    
+    return itemsCount;
 }
 
 void writeFile(HashTable<string, Job> &hashTable, string fileName)
