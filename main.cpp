@@ -283,6 +283,8 @@ void searchByDate(BinarySearchTree<Job> &jobs2)
     printHeader("Search by Date Results");
     jobs2.getEntries(*job, display);
     cout << endl;
+    
+    delete job;
 }
 
 void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -336,6 +338,8 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     jobs2.insert(*newJob);
     // Call insert to Hash Table
     hashTable.insertBadHash(newJob->getID(), *newJob);
+    
+    delete newJob;
 }
 
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -384,6 +388,8 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
     // Delete in Hash table
 
     // This could be inside if(deleteEntry(id)) where deleteEntry() returns boolean
+    
+    delete job;
 }
 
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -400,6 +406,8 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     jobs2.remove(*oldestJob);
 
     // hashTable.remove(*oldestJob->getID(), *oldestJob);
+    
+    delete oldestJob;
 }
 
 void logout(HashTable<string, Job> &hashTable)
@@ -531,6 +539,8 @@ int generateID(HashTable<string, Job> &hashTable) {
         cout << !hashTable.searchTable(temp->getID(), *temp) << " " << newID << endl;
     }
     return newID;
+    
+    delete temp;
 }
 // updated by Fawzan
 // Generates the current days date (Today)
