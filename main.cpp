@@ -45,12 +45,13 @@ void logout(HashTable<string, Job> &);
 void display(Job &anItem);
 bool compareID(const Job &, const Job &);
 bool compareDate(const Job &, const Job &);
+bool equality(const Job &, const Job&);
 void printIndentedItem(int depth, Job &job);
 void printAndSave(ofstream&, Job&);
 
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
-int NextPrime(int);
+int findNextPrime(int);
 
 int readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, Queue<Job> &, string fileName);
 void writeFile(HashTable<string, Job> &, string);
@@ -81,9 +82,7 @@ int main() {
     int itemCount = readFile(*jobs, *jobs2, *jobQueue, "jobs.txt");
 
     // The hash table for the primary tree
-    // TODO:
-    // GetNextPrime of the itemCount and assign it as the table size
-    HashTable<string, Job> *hashTable = new HashTable<string, Job>(itemCount * 2 + 3, 4);
+    HashTable<string, Job> *hashTable = new HashTable<string, Job>(findNextPrime(itemCount * 2), 4);
 
 
     // Insert the items from the queue to the hash table
@@ -146,12 +145,17 @@ bool compareID(const Job &a, const Job &b)
     return false;
 }
 
-// TODO:
-// Verify that this is legal in BSTs. This BST has the larger values on the left side of the tree
 // Compare date such that the latest first are listed
 bool compareDate(const Job &a, const Job &b)
 {
     if (a.getDate() > b.getDate())
+        return true;
+    return false;
+}
+
+bool equality(const Job &a, const Job &b)
+{
+    if (a.getDate() == b.getDate())
         return true;
     return false;
 }
@@ -382,7 +386,7 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
         
         // TODO:
         // Review removeByNonUniqueID, it does not work at this point (jobs2)
-        jobs2.removeByNonUniqueID(*job);
+        jobs2.removeByNonUniqueID(*job, equality);
         cout << *job << endl;
     }
     else
@@ -572,25 +576,18 @@ int getTodaysDate() {
     return todaysDate;
 }
 
-int NextPrime(int a) {
-  int i, j, count, num;
-for (i = a + 1; 1; i++)
-{
-    count = 0;
-    for (j = 2;j < i; j++)
+int findNextPrime(int start) {
+    int i, j, count;
+    for (i = start + 1; 1; i++)
     {
-        if (i%j == 0) // found a devisor
-        {
-            count++;
-            break;  // break for (j = 2,j < i; j++) loop
-                    // this will speed up a bit
-        }
+        count = 0;
+        for (j = 2;j < i; j++)
+            if (i%j == 0)
+            {
+                count++;
+                break;
+            }
+        if (count == 0)
+            return i;
     }
-    if (count == 0)
-    {
-        return i;
-        //break; // break for (i = a + 1; 1; i++) loop
-                 // break is not needed because return will stop execution of this function
-    }
-  }
 }
