@@ -10,6 +10,8 @@
 #define Job_h
 using std::string;
 using std::ostream;
+using std::setw;
+using std::left;
 
 class Job
 {
@@ -35,6 +37,7 @@ public:
         this->name = name;
         this->id = id;
         this->date = date;
+        this->company = company;
         this->location = location;
     }
 
@@ -88,7 +91,7 @@ public:
     }
     
     friend ostream& operator<<(ostream& s, const Job& j) {
-        s << j.getID() << " " << j.getName() << " " << j.getCompany() << " " << j.getLocation() << " " << j.getDate();
+        s << left << setw(6) << j.getID() << left << setw(50) << j.getName() << setw(40) << j.getCompany() << setw(20) << j.getLocation() << setw(8) << j.getDate();
         return s;
     }
 };

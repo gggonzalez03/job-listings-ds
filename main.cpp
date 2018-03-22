@@ -129,12 +129,7 @@ int main() {
 
 void display(Job & anItem)
 {
-    cout << anItem.getID() << " "
-    << anItem.getName() << " "
-    << anItem.getCompany() << " "
-    << anItem.getLocation() << " "
-    << anItem.getDate() << " "
-    << endl;
+    cout << anItem << endl;
 }
 
 // Compare id such that lower ids are printed first
@@ -207,18 +202,22 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
     switch (*choice.c_str()) {
         case 'U':
             printHeader("Unsorted Jobs List");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             hashTable.printTable(display);
             break;
         case 'P':
             printHeader("Sorted by ID");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs.inOrder(display);
             break;
         case 'S':
             printHeader("Sorted by Date");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs2.inOrder(display);
             break;
         case 'I':
             printHeader("Tree As Indented List");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs.printTree(printIndentedItem, 1);
             break;
         default:
