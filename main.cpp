@@ -90,7 +90,7 @@ int main() {
     while (!jobQueue->isEmpty())
     {
         jobQueue->dequeue(*job);
-        hashTable->insertBadHash(job->getID(), *job);
+        hashTable->insertGoodHash(job->getID(), *job);
     }
 
     delete job;
@@ -339,7 +339,7 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     // Call add node function for secondary tree
     jobs2.insert(*newJob);
     // Call insert to Hash Table
-    hashTable.insertBadHash(newJob->getID(), *newJob);
+    hashTable.insertGoodHash(newJob->getID(), *newJob);
 
     delete newJob;
 }
@@ -421,6 +421,7 @@ void logout(HashTable<string, Job> &hashTable)
     // print statistics
     printHeader("Load Factor");
     cout << "Hash table load factor: " << hashTable.getLoadFactor() * 100 << "%" << endl;
+    cout << "Hash table collisions: " << hashTable.getCollisionCount() << endl;
     cout << endl;
     return;
 }
