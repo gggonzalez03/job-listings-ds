@@ -161,7 +161,7 @@ bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
 
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
-    int hashedIndex = goodHash(key);
+    int hashedIndex = badHash(key);
     if(buckets[hashedIndex].searchBucketArray(item) != NULL) {
         if(buckets[hashedIndex].getCount() > 0) {
             buckets[hashedIndex].removeBucketArray(item);
@@ -173,6 +173,7 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
     } else {
         // insert into overflow structure
     }
+    return false;
 }
 
 template<typename K, class Itemtype>

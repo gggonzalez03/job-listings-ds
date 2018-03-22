@@ -84,7 +84,9 @@ template<class Itemtype>
 bool Bucket<Itemtype>::removeBucketArray(Itemtype &it) {
   for(int i = 0; i < size; i++) {
     if(items[i] == it) {
-      delete items[i];
+        it = items[i];
+        // This will delete the item (set it to an empty itemtype object)
+      items[i] = *new Itemtype();
       count--;
       return true;
     }

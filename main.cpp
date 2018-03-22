@@ -370,42 +370,45 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
 {
     string id = "";
     printHeader("Delete A Job By ID");
-    printHeader("TO BE IMPLEMENTED");
     cout << "Enter job id to delete: ";
     getline(cin, id);
 
     Job *job = new Job();
     job->setID(id);
-
-    jobs.remove(*job);
-
-    // TODO:
-    // Return the whole object from the hash table when it's deleted there
-    // Then, use that object to pass in jobs2.removeByNonUniqueID(jobobjecthere)
-
-    // TODO:
-    // Delete in BST (Primary and Secondary)
-    // Delete in Hash table
-
-    // This could be inside if(deleteEntry(id)) where deleteEntry() returns boolean
+    
+    
+    // Deletes from hashtable, jobs, and jobs2
+    if (hashTable.remove(job->getID(), *job))
+    {
+        jobs.remove(*job);
+        
+        // TODO:
+        // Review removeByNonUniqueID, it does not work at this point (jobs2)
+        jobs2.removeByNonUniqueID(*job);
+        cout << *job << endl;
+    }
+    else
+        cout << "Not found." << endl;
     
     delete job;
 }
 
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
 {
-    // TODO:
-    // Delete in BST (Primary and Secondary)
-    // Delete in Hash table
+    
     printHeader("Delete Oldest Job");
-    printHeader("TO BE IMPLEMENTED");
 
     Job *oldestJob = new Job();
+    
+    // will set oldestJob to the smallest/oldest
     jobs2.findSmallest(*oldestJob);
-    jobs.remove(*oldestJob);
-    jobs2.remove(*oldestJob);
-
-    // hashTable.remove(*oldestJob->getID(), *oldestJob);
+    
+    if (hashTable.remove(oldestJob->getID(), *oldestJob))
+    {
+        jobs.remove(*oldestJob);
+        jobs2.remove(*oldestJob);
+        cout << *oldestJob << endl;
+    }
     
     delete oldestJob;
 }
