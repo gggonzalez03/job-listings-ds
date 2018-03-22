@@ -20,9 +20,10 @@ public:
     HashTable(int, int);
     ~HashTable();
     void setTableSize(int);
+    void setBucketSize(int);
     int goodHash(K);
     int badHash(K);
-    Itemtype * searchTable(K, Itemtype &);
+    bool searchTable(K, Itemtype &);
     bool insertGoodHash(K, Itemtype &);
     bool insertBadHash(K, Itemtype &);
     bool remove(K,Itemtype &);
@@ -37,6 +38,10 @@ HashTable<K,Itemtype>::HashTable() {
     numOfItems = 0;
     tableSize = 0;
     bucketSize = 0;
+    for (int i = 0; i < tableSize; i++)
+    {
+        buckets[i] = new Bucket<Itemtype>(0);
+    }
 }
 
 template<typename K, class Itemtype>
@@ -47,6 +52,11 @@ HashTable<K,Itemtype>::HashTable(int ts, int bs) {
     numOfItems = 0;
     tableSize = ts;
     bucketSize = bs;
+    
+    for (int i = 0; i < tableSize; i++)
+    {
+        buckets[i] = *new Bucket<Itemtype>(bs);
+    }
 }
 
 template<typename K, class Itemtype>
@@ -62,6 +72,11 @@ HashTable<K,Itemtype>::~HashTable() {
 template<typename K, class Itemtype>
 void HashTable<K,Itemtype>::setTableSize(int size) {
     tableSize = size;
+}
+
+template<typename K, class Itemtype>
+void HashTable<K,Itemtype>::setBucketSize(int size) {
+    bucketSize = size;
 }
 
 template<typename K, class Itemtype>
@@ -81,20 +96,27 @@ int HashTable<K,Itemtype>::goodHash(K key) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::badHash(K key) {
-    return stoi(key) % tableSize;
+    try
+    {
+        return stoi(key) % tableSize;
+    }
+    catch(invalid_argument &e)
+    {
+        return 0;
+    }
 }
 
 template<typename K, class Itemtype>
-Itemtype * HashTable<K,Itemtype>::searchTable(K key, Itemtype &item) {
-    int hashedIndex = goodHash(key);
-    
-    if (buckets != NULL)
+bool HashTable<K,Itemtype>::searchTable(K key, Itemtype &item) {
+    int hashedIndex = badHash(key);
+    Itemtype *found = buckets[hashedIndex].searchBucketArray(item);
+    if(found)
     {
-        Itemtype *temp = buckets[hashedIndex].searchBucketArray(item);
-        return temp;
-        // search overflow
+        item = *found;
+        return true;
     }
-    return NULL;
+    // search overflow
+    return false;
 }
 
 template<typename K, class Itemtype>
@@ -122,10 +144,10 @@ bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
     int hashedIndex = badHash(key);
-    
+
     if (buckets == NULL)
         return false;
-    
+
     if(buckets[hashedIndex].getCount() == 0) {
         numOfItems++;
         return buckets[hashedIndex].insertBucketArray(item);
@@ -133,7 +155,7 @@ bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
         collisionCount++;
         return buckets[hashedIndex].insertBucketArray(item);
     }
-    
+
     // insert into overflow structure
     
     return false;

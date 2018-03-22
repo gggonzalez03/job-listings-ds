@@ -20,7 +20,9 @@ public:
 
 template<class Itemtype>
 Bucket<Itemtype>::Bucket() {
+    items = new Itemtype[0];
     count = 0;
+    size = 0;
 }
 
 template<class Itemtype>
@@ -42,19 +44,34 @@ int Bucket<Itemtype>::getCount() {
 
 template<class Itemtype>
 Itemtype * Bucket<Itemtype>::searchBucketArray(Itemtype &it) {
-  for(int i = 0; i < size; i++) {
-    if(items[i] == it) {
-      return &it;
+    bool found = false;
+    int i = 0;
+    
+    if (size <= 0)
+        return NULL;
+    
+    while(!found && i < size)
+    {
+        if (items[i] == it)
+        {
+            found = true;
+            return &items[i];
+        }
+        i++;
     }
-  }
   return NULL;
 }
 
 template<class Itemtype>
 bool Bucket<Itemtype>::insertBucketArray(Itemtype &it) {
+    Itemtype * temp = new Itemtype();
+
+    if (size <= 0)
+        return false;
+    
   for(int i = 0; i < size; i++) {
-    if((items + i) == NULL) {
-      items[i] = it;
+    if(items[i] == *temp) {
+        items[i] = it;
       count++;
       return true;
     }

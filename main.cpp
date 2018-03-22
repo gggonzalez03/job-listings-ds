@@ -70,7 +70,7 @@ int main() {
     BinarySearchTree<Job> *jobs2 = new BinarySearchTree<Job>(compareDate);
 
     // The hash table for the primary tree
-    HashTable<string, Job> *hashTable = new HashTable<string, Job>();
+    HashTable<string, Job> *hashTable = new HashTable<string, Job>(53, 4);
 
     // read the jobs into the trees
     readFile(*jobs, *jobs2, *hashTable, "jobs.txt");
@@ -232,11 +232,14 @@ void searchById(HashTable<string, Job> &hashTable)
     Job *job = new Job();
     job->setID(id);
 
-    job = hashTable.searchTable(id, *job);
-
     printHeader("Search By ID");
 
-    display(*job);
+    if (hashTable.searchTable(id, *job))
+        display(*job);
+    else
+        cout << "Job not found." << endl;
+    
+    delete job;
 }
 // updated by Fawzan
 void searchByDate(BinarySearchTree<Job> &jobs2)
@@ -272,8 +275,6 @@ void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<st
 
     if (choice == "J")
         addJob(jobs, jobs2, hashTable);
-    else if (choice == "F")
-        addJobs(jobs, jobs2, hashTable);
     else
     {
         cout << "Invalid choice." << endl;
@@ -310,20 +311,7 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     // Call add node function for secondary tree
     jobs2.insert(*newJob);
     // Call insert to Hash Table
-    hashTable.insertGoodHash(newJob->getID(), *newJob);
-}
-
-void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
-{
-    printHeader("Add Jobs With A File");
-    string fileName = "";
-    cout << "Enter the name of the txt file containing the job listings: ";
-    getline(cin, fileName);
-
-    readFile(jobs, jobs2, hashTable, fileName);
-
-    // TODO:
-    // Add to hash table
+    hashTable.insertBadHash(newJob->getID(), *newJob);
 }
 
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -461,14 +449,14 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
         jobs.insert(*job);
         // Insert in secondary tree (sorted by date)
         jobs2.insert(*job);
+        
+        hashTable.insertBadHash(job->getID(), *job);
 
         itemsCount++;
     }
     infile.close();
 
     infile.open(fileName);
-
-    hashTable.setTableSize(itemsCount);
 
     while(infile >> id)
     {
@@ -486,7 +474,7 @@ void readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTab
 
         // Insert the object
         
-        cout << hashTable.insertBadHash(id, *job) << endl;
+        hashTable.insertBadHash(id, *job);
     }
 
     infile.close();
@@ -517,13 +505,20 @@ void writeFile(HashTable<string, Job> &hashTable, string fileName)
 // updated by Fawzan
 // Generates 4 digit ID and searches HashTable to see if ID already exists
 int generateID(HashTable<string, Job> &hashTable) {
-        srand((unsigned int)time(NULL));
-        int newID = 0;
+    // Seed the random number generator
+    srand((unsigned int)time(NULL));
+    
+    int newID = 0;
+    newID = rand() % 2000 + 1000;
+    
+    Job *temp = new Job();
+    temp->setID(to_string(newID));
+
+    while(hashTable.searchTable(temp->getID(), *temp)) {
         newID = rand() % 2000 + 1000;
-    //    while(hashTable->searchTable(newID) != NULL) {
-    //        newID = rand() % 2000 + 1000;
-    //    }
-    //    return newID;
+        temp->setID(to_string(newID));
+        cout << !hashTable.searchTable(temp->getID(), *temp) << " " << newID << endl;
+    }
     return newID;
 }
 // updated by Fawzan
