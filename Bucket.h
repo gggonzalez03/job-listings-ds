@@ -16,11 +16,14 @@ public:
   bool insertBucketArray(Itemtype &);
   bool removeBucketArray(Itemtype &);
     void setSize(int);
+    void traverseBucket(void callback(ofstream &, Itemtype &), ofstream &);
 };
 
 template<class Itemtype>
 Bucket<Itemtype>::Bucket() {
+    items = new Itemtype[0];
     count = 0;
+    size = 0;
 }
 
 template<class Itemtype>
@@ -42,19 +45,34 @@ int Bucket<Itemtype>::getCount() {
 
 template<class Itemtype>
 Itemtype * Bucket<Itemtype>::searchBucketArray(Itemtype &it) {
-  for(int i = 0; i < size; i++) {
-    if(items[i] == it) {
-      return &it;
+    bool found = false;
+    int i = 0;
+    
+    if (size <= 0)
+        return NULL;
+    
+    while(!found && i < size)
+    {
+        if (items[i] == it)
+        {
+            found = true;
+            return &items[i];
+        }
+        i++;
     }
-  }
   return NULL;
 }
 
 template<class Itemtype>
 bool Bucket<Itemtype>::insertBucketArray(Itemtype &it) {
+    Itemtype * temp = new Itemtype();
+
+    if (size <= 0)
+        return false;
+    
   for(int i = 0; i < size; i++) {
-    if((items + i) == NULL) {
-      items[i] = it;
+    if(items[i] == *temp) {
+        items[i] = it;
       count++;
       return true;
     }
@@ -79,6 +97,16 @@ void Bucket<Itemtype>::setSize(int s)
 {
     size = s;
     items = new Itemtype[s];
+}
+
+template<class Itemtype>
+void Bucket<Itemtype>::traverseBucket(void callback(ofstream &, Itemtype &), ofstream & ofs)
+{
+    Itemtype * temp = new Itemtype();
+    if (size)
+        for (int i = 0; i < size; i++)
+            if (items[i] != *temp)
+                callback(ofs, items[i]);
 }
 
 #endif
