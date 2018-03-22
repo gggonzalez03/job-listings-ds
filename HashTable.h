@@ -30,6 +30,7 @@ public:
     void traverseTable(void callback(ofstream &, Itemtype &), ofstream &);
     void printTable(void callback(Itemtype &));
     double getLoadFactor() const;
+    int getCollisionCount() const;
 };
 
 
@@ -81,17 +82,18 @@ void HashTable<K,Itemtype>::setBucketSize(int size) {
 
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::goodHash(K key) {
-  int length = 0;
-  int index = 0;
-  char ch[length];
-
-  strcpy(ch, key.c_str());
-  length = (int)(key.length());
-  for(int i = 0; i < length; i++) {
-    index += ch[i];
-  }
-  index = (index * index * index) % 53;
-  return index;
+    int index = stoi(key);
+    int divisor = index % 10;
+    
+    if (!divisor)
+        divisor += 1;
+    
+    index = (index * index * index);
+    
+    string temp = to_string(index);
+    string middle = temp.substr(2,4);
+    
+    return (stoi(middle) / divisor) % tableSize;
 }
 
 template<typename K, class Itemtype>
@@ -131,7 +133,9 @@ bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
         numOfItems++;
         return buckets[hashedIndex].insertBucketArray(item);
     } else {
+        //cout << hashedIndex << endl;
         collisionCount++;
+        //cout << collisionCount << endl;
         return buckets[hashedIndex].insertBucketArray(item);
     }
     return false;
@@ -139,7 +143,7 @@ bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
 
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
-    int hashedIndex = goodHash(key);
+    int hashedIndex = badHash(key);
 
     if (buckets == NULL)
         return false;
@@ -198,6 +202,12 @@ template<typename K, class Itemtype>
 double HashTable<K,Itemtype>::getLoadFactor() const
 {
     return (double)numOfItems / (double)tableSize;
+}
+
+template<typename K, class Itemtype>
+int HashTable<K,Itemtype>::getCollisionCount() const
+{
+    return collisionCount;
 }
 
 #endif
