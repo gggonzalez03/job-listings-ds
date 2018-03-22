@@ -39,13 +39,14 @@ void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTabl
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls deleteJob() and deleteOldestJob()
 void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
-void logout();
+void logout(HashTable<string, Job> &);
 
 // display function to pass to BST traverse functions
 void display(Job &anItem);
 bool compareID(const Job &, const Job &);
 bool compareDate(const Job &, const Job &);
 void printIndentedItem(int depth, Job &job);
+void printAndSave(ofstream&, Job&);
 
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
@@ -116,6 +117,9 @@ int main() {
                 break;
             case 'R':
                 del(*jobs, *jobs2, *hashTable);
+                break;
+            case 'L':
+                logout(*hashTable);
                 break;
             default:
                 break;
@@ -279,6 +283,8 @@ void searchByDate(BinarySearchTree<Job> &jobs2)
     printHeader("Search by Date Results");
     jobs2.getEntries(*job, display);
     cout << endl;
+    
+    delete job;
 }
 
 void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -287,7 +293,6 @@ void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<st
 
     cout << endl;
     cout << "J - Add single entry" << endl;
-    cout << "F - Add listings using a file" << endl;
     cout << endl;
 
     cout << "Enter choice: ";
@@ -333,6 +338,8 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     jobs2.insert(*newJob);
     // Call insert to Hash Table
     hashTable.insertBadHash(newJob->getID(), *newJob);
+    
+    delete newJob;
 }
 
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -381,6 +388,8 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
     // Delete in Hash table
 
     // This could be inside if(deleteEntry(id)) where deleteEntry() returns boolean
+    
+    delete job;
 }
 
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
@@ -397,6 +406,8 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     jobs2.remove(*oldestJob);
 
     // hashTable.remove(*oldestJob->getID(), *oldestJob);
+    
+    delete oldestJob;
 }
 
 void logout(HashTable<string, Job> &hashTable)
@@ -484,6 +495,13 @@ int readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, Queue<Jo
     return itemsCount;
 }
 
+void printAndSave(ofstream &ofs, Job &job)
+{
+    cout << job << endl;
+    ofs << job;
+    ofs << endl;
+}
+
 void writeFile(HashTable<string, Job> &hashTable, string fileName)
 {
     ofstream ofs;
@@ -496,12 +514,9 @@ void writeFile(HashTable<string, Job> &hashTable, string fileName)
         cout << "Error saving to file " << fileName;
         exit(111);
     }
-
-//    // Call these in the hast table loop
-//    ofs << "" << table[i].getID();
-//    ofs << "; " << table[i].getName();
-//    ofs << "; " << table[i].getCity();
-//    ofs << "; " << table[i].getDate();
+    
+    printHeader("Hash Table Items");
+    hashTable.traverseTable(printAndSave, ofs);
 
     ofs.close();
 }
@@ -523,6 +538,8 @@ int generateID(HashTable<string, Job> &hashTable) {
         temp->setID(to_string(newID));
         cout << !hashTable.searchTable(temp->getID(), *temp) << " " << newID << endl;
     }
+    
+    delete temp;
     return newID;
 }
 // updated by Fawzan

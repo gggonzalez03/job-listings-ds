@@ -27,6 +27,7 @@ public:
     bool insertGoodHash(K, Itemtype &);
     bool insertBadHash(K, Itemtype &);
     bool remove(K,Itemtype &);
+    void traverseTable(void callback(ofstream &, Itemtype &), ofstream &);
 };
 
 
@@ -171,6 +172,16 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
         numOfItems--;
     } else {
         // insert into overflow structure
+    }
+}
+
+template<typename K, class Itemtype>
+void HashTable<K,Itemtype>::traverseTable(void callback(ofstream &, Itemtype &), ofstream & ofs)
+{
+    for (int i = 0; i < tableSize; i++)
+    {
+        if (buckets[i].getCount())
+            buckets[i].traverseBucket(callback, ofs);
     }
 }
 
