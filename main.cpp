@@ -50,6 +50,7 @@ void printAndSave(ofstream&, Job&);
 
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
+int NextPrime(int);
 
 int readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, Queue<Job> &, string fileName);
 void writeFile(HashTable<string, Job> &, string);
@@ -74,17 +75,17 @@ int main() {
     // Queue that will be used to save the entries in the order they were added
     // This will be used to insert items to the hash table without re opening the input file
     Queue<Job> *jobQueue = new Queue<Job>();
-    
+
     // read the jobs into the trees
     // And also fill up the queue and return the itemsCount
     int itemCount = readFile(*jobs, *jobs2, *jobQueue, "jobs.txt");
-    
+
     // The hash table for the primary tree
     // TODO:
     // GetNextPrime of the itemCount and assign it as the table size
     HashTable<string, Job> *hashTable = new HashTable<string, Job>(itemCount * 2 + 3, 4);
-    
-    
+
+
     // Insert the items from the queue to the hash table
     Job *job = new Job();
     while (!jobQueue->isEmpty())
@@ -92,7 +93,7 @@ int main() {
         jobQueue->dequeue(*job);
         hashTable->insertBadHash(job->getID(), *job);
     }
-    
+
     delete job;
     delete jobQueue;
 
@@ -263,7 +264,7 @@ void searchById(HashTable<string, Job> &hashTable)
         display(*job);
     else
         cout << "Job not found." << endl;
-    
+
     delete job;
 }
 // updated by Fawzan
@@ -283,7 +284,7 @@ void searchByDate(BinarySearchTree<Job> &jobs2)
     printHeader("Search by Date Results");
     jobs2.getEntries(*job, display);
     cout << endl;
-    
+
     delete job;
 }
 
@@ -338,7 +339,7 @@ void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable
     jobs2.insert(*newJob);
     // Call insert to Hash Table
     hashTable.insertBadHash(newJob->getID(), *newJob);
-    
+
     delete newJob;
 }
 
@@ -388,7 +389,7 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
     // Delete in Hash table
 
     // This could be inside if(deleteEntry(id)) where deleteEntry() returns boolean
-    
+
     delete job;
 }
 
@@ -406,7 +407,7 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
     jobs2.remove(*oldestJob);
 
     // hashTable.remove(*oldestJob->getID(), *oldestJob);
-    
+
     delete oldestJob;
 }
 
@@ -479,19 +480,19 @@ int readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, Queue<Jo
 
         // Insert the object
         jobs.insert(*job);
-        
+
         // Insert in secondary tree (sorted by date)
         jobs2.insert(*job);
-        
+
         // Insert in the queue
         queue.enqueue(*job);
-        
+
         itemsCount++;
     }
     infile.close();
-    
+
     delete job;
-    
+
     return itemsCount;
 }
 
@@ -514,7 +515,7 @@ void writeFile(HashTable<string, Job> &hashTable, string fileName)
         cout << "Error saving to file " << fileName;
         exit(111);
     }
-    
+
     printHeader("Hash Table Items");
     hashTable.traverseTable(printAndSave, ofs);
 
@@ -526,10 +527,10 @@ void writeFile(HashTable<string, Job> &hashTable, string fileName)
 int generateID(HashTable<string, Job> &hashTable) {
     // Seed the random number generator
     srand((unsigned int)time(NULL));
-    
+
     int newID = 0;
     newID = rand() % 2000 + 1000;
-    
+
     Job *temp = new Job();
     temp->setID(to_string(newID));
 
@@ -538,7 +539,7 @@ int generateID(HashTable<string, Job> &hashTable) {
         temp->setID(to_string(newID));
         cout << !hashTable.searchTable(temp->getID(), *temp) << " " << newID << endl;
     }
-    
+
     delete temp;
     return newID;
 }
@@ -566,4 +567,27 @@ int getTodaysDate() {
     int todaysDate = stoi(wholeDate);
 
     return todaysDate;
+}
+
+int NextPrime(int a) {
+  int i, j, count, num;
+for (i = a + 1; 1; i++)
+{
+    count = 0;
+    for (j = 2;j < i; j++)
+    {
+        if (i%j == 0) // found a devisor
+        {
+            count++;
+            break;  // break for (j = 2,j < i; j++) loop
+                    // this will speed up a bit
+        }
+    }
+    if (count == 0)
+    {
+        return i;
+        //break; // break for (i = a + 1; 1; i++) loop
+                 // break is not needed because return will stop execution of this function
+    }
+  }
 }
