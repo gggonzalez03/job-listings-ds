@@ -28,7 +28,7 @@ const string password = "12345";
 // Add parameters to functions such that they accomodate both primary and secondary trees and the hash table
 bool login();
 void displayMenu();
-void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2);
+void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &);
 void search(BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls searchById() and searchByDate()
 void searchById(HashTable<string, Job> &hashTable); // Hash table
 void searchByDate(BinarySearchTree<Job> &jobs2); // Secondary tree
@@ -45,12 +45,13 @@ void logout(HashTable<string, Job> &);
 void display(Job &anItem);
 bool compareID(const Job &, const Job &);
 bool compareDate(const Job &, const Job &);
+bool equality(const Job &, const Job&);
 void printIndentedItem(int depth, Job &job);
 void printAndSave(ofstream&, Job&);
 
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
-int NextPrime(int);
+int findNextPrime(int);
 
 int readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, Queue<Job> &, string fileName);
 void writeFile(HashTable<string, Job> &, string);
@@ -81,9 +82,7 @@ int main() {
     int itemCount = readFile(*jobs, *jobs2, *jobQueue, "jobs.txt");
 
     // The hash table for the primary tree
-    // TODO:
-    // GetNextPrime of the itemCount and assign it as the table size
-    HashTable<string, Job> *hashTable = new HashTable<string, Job>(itemCount * 2 + 3, 4);
+    HashTable<string, Job> *hashTable = new HashTable<string, Job>(findNextPrime(itemCount * 2), 4);
 
 
     // Insert the items from the queue to the hash table
@@ -108,7 +107,7 @@ int main() {
         switch(*choice.c_str())
         {
             case 'D':
-                displayJobListings(*jobs, *jobs2);
+                displayJobListings(*jobs, *jobs2, *hashTable);
                 break;
             case 'S':
                 search(*jobs2, *hashTable);
@@ -130,12 +129,7 @@ int main() {
 
 void display(Job & anItem)
 {
-    cout << anItem.getID() << " "
-    << anItem.getName() << " "
-    << anItem.getCompany() << " "
-    << anItem.getLocation() << " "
-    << anItem.getDate() << " "
-    << endl;
+    cout << anItem << endl;
 }
 
 // Compare id such that lower ids are printed first
@@ -146,12 +140,17 @@ bool compareID(const Job &a, const Job &b)
     return false;
 }
 
-// TODO:
-// Verify that this is legal in BSTs. This BST has the larger values on the left side of the tree
 // Compare date such that the latest first are listed
 bool compareDate(const Job &a, const Job &b)
 {
     if (a.getDate() > b.getDate())
+        return true;
+    return false;
+}
+
+bool equality(const Job &a, const Job &b)
+{
+    if (a.getDate() == b.getDate())
         return true;
     return false;
 }
@@ -187,7 +186,7 @@ void displayMenu()
     cout << endl;
 }
 
-void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2)
+void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
 {
     string choice = "";
     cout << endl;
@@ -202,20 +201,23 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
 
     switch (*choice.c_str()) {
         case 'U':
-            //            printUnsorted();
             printHeader("Unsorted Jobs List");
-            printHeader("TO BE IMPLEMENTED");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
+            hashTable.printTable(display);
             break;
         case 'P':
             printHeader("Sorted by ID");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs.inOrder(display);
             break;
         case 'S':
             printHeader("Sorted by Date");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs2.inOrder(display);
             break;
         case 'I':
             printHeader("Tree As Indented List");
+            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs.printTree(printIndentedItem, 1);
             break;
         default:
@@ -284,7 +286,6 @@ void searchByDate(BinarySearchTree<Job> &jobs2)
     printHeader("Search by Date Results");
     jobs2.getEntries(*job, display);
     cout << endl;
-
     delete job;
 }
 
@@ -371,43 +372,43 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
 {
     string id = "";
     printHeader("Delete A Job By ID");
-    printHeader("TO BE IMPLEMENTED");
     cout << "Enter job id to delete: ";
     getline(cin, id);
 
     Job *job = new Job();
     job->setID(id);
-
-    jobs.remove(*job);
-
-    // TODO:
-    // Return the whole object from the hash table when it's deleted there
-    // Then, use that object to pass in jobs2.removeByNonUniqueID(jobobjecthere)
-
-    // TODO:
-    // Delete in BST (Primary and Secondary)
-    // Delete in Hash table
-
-    // This could be inside if(deleteEntry(id)) where deleteEntry() returns boolean
-
+    
+    // Deletes from hashtable, jobs, and jobs2
+    if (hashTable.remove(job->getID(), *job))
+    {
+        jobs.remove(*job);
+        
+        // TODO:
+        // Review removeByNonUniqueID, it does not work at this point (jobs2)
+        jobs2.removeByNonUniqueID(*job, equality);
+        cout << *job << endl;
+    }
+    else
+        cout << "Not found." << endl;
     delete job;
 }
 
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
 {
-    // TODO:
-    // Delete in BST (Primary and Secondary)
-    // Delete in Hash table
+    
     printHeader("Delete Oldest Job");
-    printHeader("TO BE IMPLEMENTED");
 
     Job *oldestJob = new Job();
+    
+    // will set oldestJob to the smallest/oldest
     jobs2.findSmallest(*oldestJob);
-    jobs.remove(*oldestJob);
-    jobs2.remove(*oldestJob);
-
-    // hashTable.remove(*oldestJob->getID(), *oldestJob);
-
+    
+    if (hashTable.remove(oldestJob->getID(), *oldestJob))
+    {
+        jobs.remove(*oldestJob);
+        jobs2.remove(*oldestJob);
+        cout << *oldestJob << endl;
+    }
     delete oldestJob;
 }
 
@@ -416,6 +417,11 @@ void logout(HashTable<string, Job> &hashTable)
     // TODO:
     // Write data from the hash table
     writeFile(hashTable, "updatedJobs.txt");
+    
+    // print statistics
+    printHeader("Load Factor");
+    cout << "Hash table load factor: " << hashTable.getLoadFactor() * 100 << "%" << endl;
+    cout << endl;
     return;
 }
 
@@ -569,25 +575,18 @@ int getTodaysDate() {
     return todaysDate;
 }
 
-int NextPrime(int a) {
-  int i, j, count, num;
-for (i = a + 1; 1; i++)
-{
-    count = 0;
-    for (j = 2;j < i; j++)
+int findNextPrime(int start) {
+    int i, j, count;
+    for (i = start + 1; 1; i++)
     {
-        if (i%j == 0) // found a devisor
-        {
-            count++;
-            break;  // break for (j = 2,j < i; j++) loop
-                    // this will speed up a bit
-        }
+        count = 0;
+        for (j = 2;j < i; j++)
+            if (i%j == 0)
+            {
+                count++;
+                break;
+            }
+        if (count == 0)
+            return i;
     }
-    if (count == 0)
-    {
-        return i;
-        //break; // break for (i = a + 1; 1; i++) loop
-                 // break is not needed because return will stop execution of this function
-    }
-  }
 }

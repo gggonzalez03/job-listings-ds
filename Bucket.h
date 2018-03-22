@@ -17,6 +17,7 @@ public:
   bool removeBucketArray(Itemtype &);
     void setSize(int);
     void traverseBucket(void callback(ofstream &, Itemtype &), ofstream &);
+    void printBucket(void callback(Itemtype &));
 };
 
 template<class Itemtype>
@@ -84,7 +85,9 @@ template<class Itemtype>
 bool Bucket<Itemtype>::removeBucketArray(Itemtype &it) {
   for(int i = 0; i < size; i++) {
     if(items[i] == it) {
-      delete items[i];
+        it = items[i];
+        // This will delete the item (set it to an empty itemtype object)
+      items[i] = *new Itemtype();
       count--;
       return true;
     }
@@ -107,6 +110,16 @@ void Bucket<Itemtype>::traverseBucket(void callback(ofstream &, Itemtype &), ofs
         for (int i = 0; i < size; i++)
             if (items[i] != *temp)
                 callback(ofs, items[i]);
+}
+
+template<class Itemtype>
+void Bucket<Itemtype>::printBucket(void callback(Itemtype &))
+{
+    Itemtype * temp = new Itemtype();
+    if (size)
+        for (int i = 0; i < size; i++)
+            if (items[i] != *temp)
+                callback(items[i]);
 }
 
 #endif

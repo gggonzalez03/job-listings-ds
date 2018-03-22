@@ -66,7 +66,7 @@ public:
     // Find entries that match the search
     bool getEntries(const ItemType & target, void visit(ItemType &)) const;
     // Deletes an item based on a non unique id
-    bool removeByNonUniqueID(ItemType & target);
+    bool removeByNonUniqueID(ItemType & target, bool equality(const ItemType &, const ItemType &));
  
 };
 
@@ -90,14 +90,15 @@ bool BinarySearchTree<ItemType>::remove(const ItemType & target)
 }
 
 template <class ItemType>
-bool BinarySearchTree<ItemType>::removeByNonUniqueID(ItemType & target)
+bool BinarySearchTree<ItemType>::removeByNonUniqueID(ItemType & target, bool equality(const ItemType &, const ItemType &))
 {
     BinaryNode<ItemType> *node = findNode(this->rootPtr, target);
+
     while(node != NULL)
     {
-        if (target == node->getItem())
+        if (equality(target, node->getItem()))
         {
-            deleteNode(node);
+            remove(target);
             return true;
         }
         
