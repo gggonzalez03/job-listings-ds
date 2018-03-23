@@ -16,7 +16,9 @@
 2377  Medical Receptionist                              California Spine Center                 San Jose            20180227
 2478  Entry Level Process Engineer                      DISCO Hi-Tec America                    Santa Clara         20180208
 1207  Medical Receptionist                              California Spine Center                 San Jose            20180227
+2929  Shipping Personnel                                Leading Contract Manufacturer           Santa Clara         20180105
 2135  Acoustic Integration Engineer                     Apple                                   Santa Clara Valley  20180227
+2208  Entry Level Medical Office Admin Assistant        San Jose Professional Group             Santa Clara         20171229
 2147  Medical Scribe and Assistant                      Mind and Body Pain Clinic               San Jose            20180221
 1348  Engineer                                          Good Samaritan Hospital                 San Jose            20180221
 2786  Engineer                                          Foveon Inc.                             San Jose            20180228
