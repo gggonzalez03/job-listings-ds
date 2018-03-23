@@ -13,7 +13,7 @@
 #include <iomanip>
 #include <ctime>
 
-#include "Job.h"
+#include "Job.cpp"
 #include "BinarySearchTree.h"
 #include "HashTable.h"
 #include "Queue.h"
@@ -382,12 +382,12 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
 
     Job *job = new Job();
     job->setID(id);
-    
+
     // Deletes from hashtable, jobs, and jobs2
     if (hashTable.remove(job->getID(), *job))
     {
         jobs.remove(*job);
-        
+
         // TODO:
         // Review removeByNonUniqueID, it does not work at this point (jobs2)
         jobs2.removeByNonUniqueID(*job, equality);
@@ -400,14 +400,14 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
 
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable)
 {
-    
+
     printHeader("Delete Oldest Job");
 
     Job *oldestJob = new Job();
-    
+
     // will set oldestJob to the smallest/oldest
     jobs2.findSmallest(*oldestJob);
-    
+
     if (hashTable.remove(oldestJob->getID(), *oldestJob))
     {
         jobs.remove(*oldestJob);
@@ -422,7 +422,7 @@ void logout(HashTable<string, Job> &hashTable)
     // TODO:
     // Write data from the hash table
     writeFile(hashTable, "updatedJobs.txt");
-    
+
     // print statistics
     printHeader("Load Factor");
     cout << "Hash table load factor: " << hashTable.getLoadFactor() * 100 << "%" << endl;
