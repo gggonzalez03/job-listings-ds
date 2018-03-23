@@ -133,9 +133,7 @@ bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
         numOfItems++;
         return buckets[hashedIndex].insertBucketArray(item);
     } else {
-        //cout << hashedIndex << endl;
         collisionCount++;
-        //cout << collisionCount << endl;
         return buckets[hashedIndex].insertBucketArray(item);
     }
     return false;
@@ -167,7 +165,8 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
     if(buckets[hashedIndex].searchBucketArray(item) != NULL) {
         if(buckets[hashedIndex].getCount() > 0) {
             buckets[hashedIndex].removeBucketArray(item);
-            collisionCount--;
+            if (buckets[hashedIndex].getCount() > 1)
+                collisionCount--;
             return true;
         }
         buckets[hashedIndex].removeBucketArray(item);

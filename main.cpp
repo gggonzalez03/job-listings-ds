@@ -43,6 +43,7 @@ void logout(HashTable<string, Job> &);
 
 // display function to pass to BST traverse functions
 void display(Job &anItem);
+void prettyPrint(Job &anItem);
 bool compareID(const Job &, const Job &);
 bool compareDate(const Job &, const Job &);
 bool equality(const Job &, const Job&);
@@ -132,6 +133,11 @@ void display(Job & anItem)
     cout << anItem << endl;
 }
 
+void prettyPrint(Job & anItem)
+{
+    cout << " " << anItem.getID() << " " << anItem.getName() << " " << anItem.getCompany() << " " << anItem.getLocation() << " " << anItem.getDate() << endl;
+}
+
 // Compare id such that lower ids are printed first
 bool compareID(const Job &a, const Job &b)
 {
@@ -163,7 +169,7 @@ void printIndentedItem(int depth, Job &job)
     }
 
     cout << depth << ". ";
-    display(job);
+    prettyPrint(job);
     cout << endl;
 }
 
@@ -217,7 +223,6 @@ void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs
             break;
         case 'I':
             printHeader("Tree As Indented List");
-            cout << left << setw(6) << "ID" << left << setw(50) << "JOB TITLE" << setw(40) << "COMPANY" << setw(20) << "LOCATION" << setw(8) << "DATE" << endl;
             jobs.printTree(printIndentedItem, 1);
             break;
         default:
@@ -263,7 +268,7 @@ void searchById(HashTable<string, Job> &hashTable)
     printHeader("Search By ID");
 
     if (hashTable.searchTable(id, *job))
-        display(*job);
+        prettyPrint(*job);
     else
         cout << "Job not found." << endl;
 
