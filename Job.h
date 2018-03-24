@@ -10,8 +10,6 @@
 #define Job_h
 using std::string;
 using std::ostream;
-using std::setw;
-using std::left;
 
 class Job
 {
