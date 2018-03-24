@@ -13,7 +13,7 @@
 #include <iomanip>
 #include <ctime>
 
-#include "Job.cpp"
+#include "Job.h"
 #include "BinarySearchTree.h"
 #include "HashTable.h"
 #include "Queue.h"
