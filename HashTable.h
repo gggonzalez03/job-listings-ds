@@ -3,6 +3,7 @@
 #define HASH_TABLE
 
 #include "Bucket.h"
+#include "LinkedList.h"
 
 using std::string;
 
@@ -10,6 +11,7 @@ template<typename K, class Itemtype>
 class HashTable {
 private:
     Bucket<Itemtype> *buckets;
+    LinkedList<Itemtype> *overflow;
     double loadFactor;
     int collisionCount;
     int numOfItems;
@@ -37,6 +39,7 @@ public:
 template<typename K, class Itemtype>
 HashTable<K,Itemtype>::HashTable() {
     buckets = new Bucket<Itemtype>[0];
+    overflow = new LinkedList<Itemtype>();
     loadFactor = 0.0;
     collisionCount = 0;
     numOfItems = 0;
@@ -47,6 +50,7 @@ HashTable<K,Itemtype>::HashTable() {
 template<typename K, class Itemtype>
 HashTable<K,Itemtype>::HashTable(int ts, int bs) {
     buckets = new Bucket<Itemtype>[ts];
+    overflow = new LinkedList<Itemtype>();
     loadFactor = 0.0;
     collisionCount = 0;
     numOfItems = 0;
@@ -133,8 +137,10 @@ bool HashTable<K,Itemtype>::insertGoodHash(K key, Itemtype &item) {
         numOfItems++;
         return buckets[hashedIndex].insertBucketArray(item);
     } else {
+        if (!buckets[hashedIndex].insertBucketArray(item))
+            overflow->insertFront(item);
         collisionCount++;
-        return buckets[hashedIndex].insertBucketArray(item);
+        return true;
     }
     return false;
 }
@@ -150,11 +156,11 @@ bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
         numOfItems++;
         return buckets[hashedIndex].insertBucketArray(item);
     } else {
+        if (!buckets[hashedIndex].insertBucketArray(item))
+            overflow->insertFront(item);
         collisionCount++;
-        return buckets[hashedIndex].insertBucketArray(item);
+        return true;
     }
-
-    // insert into overflow structure
     
     return false;
 }
@@ -162,17 +168,24 @@ bool HashTable<K,Itemtype>::insertBadHash(K key, Itemtype &item) {
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
     int hashedIndex = goodHash(key);
-    if(buckets[hashedIndex].searchBucketArray(item) != NULL) {
+    if(buckets[hashedIndex].removeBucketArray(item)) {
         if(buckets[hashedIndex].getCount() > 0) {
-            buckets[hashedIndex].removeBucketArray(item);
-            if (buckets[hashedIndex].getCount() > 1)
-                collisionCount--;
+            collisionCount--;
             return true;
         }
-        buckets[hashedIndex].removeBucketArray(item);
         numOfItems--;
-    } else {
-        // insert into overflow structure
+        return true;
+    }
+    else {
+        bool deleted = false;
+        
+        if (overflow->deleteNode(item))
+        {
+            collisionCount--;
+            deleted = true;
+        }
+        
+        return deleted;
     }
     return false;
 }
@@ -185,6 +198,8 @@ void HashTable<K,Itemtype>::traverseTable(void callback(ofstream &, Itemtype &),
         if (buckets[i].getCount())
             buckets[i].traverseBucket(callback, ofs);
     }
+    
+    overflow->traverseList(callback, ofs);
 }
 
 template<typename K, class Itemtype>
@@ -195,6 +210,8 @@ void HashTable<K,Itemtype>::printTable(void callback(Itemtype &))
         if (buckets[i].getCount())
             buckets[i].printBucket(callback);
     }
+    
+    overflow->printList(callback);
 }
 
 template<typename K, class Itemtype>

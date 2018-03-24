@@ -1,6 +1,9 @@
 #include <iostream>
+#include <iomanip>
 #include "Job.h"
-using namespace std;
+
+using std::setw;
+using std::left;
 
 Job::Job()
 {
