@@ -130,8 +130,6 @@ bool BinarySearchTree<ItemType>::getEntry(const ItemType& anEntry, ItemType & re
 template<class ItemType>
 bool BinarySearchTree<ItemType>::getEntries(const ItemType & target, void callback(ItemType &)) const
 {
-    // TODO:
-    // Convert to arrays
     BinaryNode<ItemType> *nodePtr = findNode(this->rootPtr, target);
     
     // Only try to set returnedItem IF nodePtr is not NULL

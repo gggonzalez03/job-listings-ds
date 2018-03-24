@@ -17,25 +17,28 @@ using namespace std;
 const string username = "Fawzan";
 const string password = "12345";
 
-
-// TODO:
-// Add parameters to functions such that they accomodate both primary and secondary trees and the hash table
 bool login();
+// Display the menu for the users
 void displayMenu();
+// Display a submenu for displaying data from the trees and the hash table
 void displayJobListings(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &);
+// Display a submenu for searching
 void search(BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls searchById() and searchByDate()
 void searchById(HashTable<string, Job> &hashTable); // Hash table
 void searchByDate(BinarySearchTree<Job> &jobs2); // Secondary tree
-// Should take both primary and secondary tree
+// Display a submenu for inserting/adding
 void add(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls addJob() and addJobs();
 void addJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
 void addJobs(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
+// Display a submenu for deleting/removing
 void del(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable); // Calls deleteJob() and deleteOldestJob()
 void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
 void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTable<string, Job> &hashTable);
+// Logout will save the updated items in a text file
+// And also print statistics
 void logout(HashTable<string, Job> &);
 
-// display function to pass to BST traverse functions
+// display function to pass to BST/HashTable traverse functions
 void display(Job &anItem);
 void prettyPrint(Job &anItem);
 bool compareID(const Job &, const Job &);
@@ -44,10 +47,12 @@ bool equality(const Job &, const Job&);
 void printIndentedItem(int depth, Job &job);
 void printAndSave(ofstream&, Job&);
 
+// Helper functions
 int generateID(HashTable<string, Job> &hashTable);
 int getTodaysDate();
 int findNextPrime(int);
 
+// File operation functions
 int readFile(BinarySearchTree<Job> &, BinarySearchTree<Job> &, Queue<Job> &, string fileName);
 void writeFile(HashTable<string, Job> &, string);
 
@@ -77,6 +82,7 @@ int main() {
     int itemCount = readFile(*jobs, *jobs2, *jobQueue, "jobs.txt");
 
     // The hash table for the primary tree
+    // Initialize with the next prime number of itemsCount * 2
     HashTable<string, Job> *hashTable = new HashTable<string, Job>(findNextPrime(itemCount * 2), 4);
 
 
@@ -254,8 +260,6 @@ void searchById(HashTable<string, Job> &hashTable)
     cout << "Enter 5 digit ID (ex. 12423): ";
     getline(cin, id);
 
-    // TODO:
-    // This won't work until items are inserted in the hash table
     Job *job = new Job();
     job->setID(id);
 
@@ -382,8 +386,6 @@ void deleteJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, HashTa
     {
         jobs.remove(*job);
 
-        // TODO:
-        // Review removeByNonUniqueID, it does not work at this point (jobs2)
         jobs2.removeByNonUniqueID(*job, equality);
         cout << *job << endl;
     }
@@ -413,8 +415,6 @@ void deleteOldestJob(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, 
 
 void logout(HashTable<string, Job> &hashTable)
 {
-    // TODO:
-    // Write data from the hash table
     writeFile(hashTable, "updatedJobs.txt");
 
     // print statistics
@@ -465,9 +465,7 @@ int readFile(BinarySearchTree<Job> &jobs, BinarySearchTree<Job> &jobs2, Queue<Jo
         cout << "Error opening " << fileName << " for reading\n";
         exit(111);
     }
-
-    // TODO:
-    // Read the file and insert items into the primaryTree, secondaryTree, and the hast table
+    
     Job *job = nullptr;
 
     while(infile >> id)
