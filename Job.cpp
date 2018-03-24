@@ -2,8 +2,7 @@
 #include <iomanip>
 #include "Job.h"
 
-using std::setw;
-using std::left;
+using namespace std;
 
 Job::Job()
 {
