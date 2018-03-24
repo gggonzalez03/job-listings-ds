@@ -1,4 +1,9 @@
 // HashTable Class
+// Created by Ging Gonzalez and Fawzan Khan
+// HashTable class saves an array of buckets that contain the main data
+// and as well as the colliions. Overflows are saved in a different data
+// structure, LinkedList.
+
 #ifndef HASH_TABLE
 #define HASH_TABLE
 
@@ -18,24 +23,41 @@ private:
     int tableSize;
     int bucketSize;
 public:
+    // Constructors
     HashTable();
     HashTable(int, int);
+    // Destructor
     ~HashTable();
+    // Sets the size of the hash table
     void setTableSize(int);
+    // Sets the size of each bucket in the hash table
     void setBucketSize(int);
+    // Returns a hashed index using a good hash algorithm
     int goodHash(K);
+    // Returns a hashed index using a bad hash algorithm
     int badHash(K);
+    // Searches the table by a certain key, and saves the result in the object passed in
+    // returns boolean
     bool searchTable(K, Itemtype &);
+    // Insert using the good hash algorithm
+    // returns boolean
     bool insertGoodHash(K, Itemtype &);
+    // Insert using the bad hash algorithm
+    // returns boolean
     bool insertBadHash(K, Itemtype &);
+    // Removes an item from the table, and saves the removed item into the object passed in
     bool remove(K,Itemtype &);
+    // Traverse the table with a file stream callback
     void traverseTable(void callback(ofstream &, Itemtype &), ofstream &);
+    // Traverse the table with a callback that accepts an item object
     void printTable(void callback(Itemtype &));
+    // Returns the load factor in decimal form
     double getLoadFactor() const;
+    // Returns the accumulated collision count
     int getCollisionCount() const;
 };
 
-
+// Constructors
 template<typename K, class Itemtype>
 HashTable<K,Itemtype>::HashTable() {
     buckets = new Bucket<Itemtype>[0];
@@ -64,6 +86,7 @@ HashTable<K,Itemtype>::HashTable(int ts, int bs) {
     }
 }
 
+// Desctructor
 template<typename K, class Itemtype>
 HashTable<K,Itemtype>::~HashTable() {
     for(int i = 0; i < tableSize; i++) {
@@ -74,6 +97,7 @@ HashTable<K,Itemtype>::~HashTable() {
     delete[] buckets;
 }
 
+// Setters
 template<typename K, class Itemtype>
 void HashTable<K,Itemtype>::setTableSize(int size) {
     tableSize = size;
@@ -84,6 +108,7 @@ void HashTable<K,Itemtype>::setBucketSize(int size) {
     bucketSize = size;
 }
 
+// Hashes
 template<typename K, class Itemtype>
 int HashTable<K,Itemtype>::goodHash(K key) {
     int index = stoi(key);
@@ -112,6 +137,7 @@ int HashTable<K,Itemtype>::badHash(K key) {
     }
 }
 
+// Hash table operations
 template<typename K, class Itemtype>
 bool HashTable<K,Itemtype>::searchTable(K key, Itemtype &item) {
     int hashedIndex = goodHash(key);
@@ -193,6 +219,7 @@ bool HashTable<K,Itemtype>::remove(K key, Itemtype &item) {
     return false;
 }
 
+// Traversal methods
 template<typename K, class Itemtype>
 void HashTable<K,Itemtype>::traverseTable(void callback(ofstream &, Itemtype &), ofstream & ofs)
 {
@@ -230,148 +257,3 @@ int HashTable<K,Itemtype>::getCollisionCount() const
 }
 
 #endif
-/*
- #include "HashEntry.h"
-
- const int TABLE_SIZE = 150;
-
- template<typename K, typename V>
- class HashTable {
- private:
- // HashEntry array
- Bucket<Itemtype> *bucket;
- double loadFactor;
- int collisionCount;
- int numOfElements;
- public:
- // Constructor
- HashTable();
- // Destructor
- ~HashTable();
- // HashTable operations
- int goodHash(K);
- int badHash(K);
- V searchTable(K);
- void insertGoodHash(K,V);
- void insertBadHash(K,V);
- V remove(K);
- };
-
- template<typename K, typename V>
- HashTable<K,V>::HashTable() {
- bucket = new Bucket<Itemtype>[TABLE_SIZE];
- loadFactor = 0.0;
- collisionCount = 0;
- numOfElements = 0;
- }
-
- template<typename K, typename V>
- HashTable<K,V>::~HashTable() {
- for(int i = 0; i < TABLE_SIZE; i++) {
- if(arr[i] != NULL) {
- delete arr[i];
- }
- }
- delete[] arr;
- }
-
- // Hash function that has minimum collisions
- template<typename K, typename V>
- int HashTable<K,V>::goodHash(K key) {
- return 0;
- }
-
- // Basic Hash function that may have many collisions
- template<typename K, typename V>
- int HashTable<K,V>::badHash(K key) {
- return 0;
- }
-
- // Searches HashTable based on the key, hashes key value to get the index
- template<typename K,typename V>
- V HashTable<K,V>::searchTable(K key) {
- int hashedIndex = goodHash(key);
- // if hashedIndex contains the search key
- if(arr[hashedIndex]->getKey() == key) {
- return arr[hashedIndex]->getValue();
- } else {
- // searches the bucketArray for the search key
- arr[hashedIndex]->getBucketArr()->searchBucketArray(key);
- }
- return NULL;
- }
-
- // Inserts into HashTable using goodHash()
- template<typename K, typename V>
- void HashTable<K,V>::insertGoodHash(K key, V value) {
- HashEntry<K,V> *item = new HashEntry<K,V>(key, value);
- int hashedIndex = goodHash(key);
- // if hashedIndex is empty
- if(arr[hashedIndex] == NULL)
- {
- arr[hashedIndex] = item;
- // increment number of elements
- numOfElements++;
- // calculate load factor each time you insert
- loadFactor = numOfElements % TABLE_SIZE;
- } else {
- // checks if the HashEntry items bucket array is full
- if(item->getBucketArr()->getCount() != 3) {
- // inserts item into bucket array, starting at index[0]
- item->getBucketArr()->insertBucketArray(hashedIndex, value);
- // update number of collisions
- collisionCount++;
- }
- // insert into overflow linked list
- //collisionCount++;
- }
- }
-
-
- // Inserts into HashTable using badHash()
- template<typename K, typename V>
- void HashTable<K,V>::insertBadHash(K key, V value) {
- HashEntry<K,V> *item = new HashEntry<K,V>(key, value);
- int hashedIndex = badHash(key);
- // if hashedIndex is empty
- if(arr[hashedIndex] == NULL) {
- arr[hashedIndex] = item;
- // increment number of elements
- numOfElements++;
- // calculate load factor each time you insert
- loadFactor = numOfElements % TABLE_SIZE;
- } else {
- // checks if the HashEntry items bucket array is full
- if(item->getBucketArr()->getCount() != 3) {
- // inserts item into bucket array, starting at index[0]
- item->getBucketArr()->insertBucketArray(key, value);
- // update number of collisions
- collisionCount++;
- }
- // insert into overflow linked list
- //collisionCount++;
- }
- }
-
- // Removes the key-value pair at the hashed index
- template<typename K, typename V>
- V HashTable<K,V>::remove(K key) {
- int hashedIndex = goodHash(key);
- // check HashTable array
- if(arr[hashedIndex]->getKey() == key) {
- HashEntry<K,V> *temp = arr[hashedIndex];
- //arr[hashedIndex] = NULL;
- numOfElements--;
- return temp->getValue();
- // update load factor
- loadFactor = numOfElements % TABLE_SIZE;
- } else if(arr[hashedIndex]->getBucketArr()->getCount() != 0) { // if the item is in the bucketArray
- arr[hashedIndex]->getBucketArr()->removeBucketArray(key);
- } else {
- // check overflow link list and remove item
- }
- return NULL;
- }
-
- #endif
- */

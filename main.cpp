@@ -1,10 +1,4 @@
-//
-//  main.cpp
-//  JobListings
-//
-//  Created by Ging Gonzalez on 3/17/18.
-//  Copyright © 2018 Ging Gonzalez. All rights reserved.
-//
+// Created and modified by Ging Gonzalez and Fawzan Khan
 
 #include <fstream>
 #include <iostream>
