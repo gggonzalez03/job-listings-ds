@@ -116,6 +116,23 @@ bool LinkedList<ItemType>::deleteNode(ItemType &item)
 }
 
 template<class ItemType>
+bool LinkedList<ItemType>::searchList(ItemType &item) const
+{
+    ListNode *nodePtr = head;
+    
+    while (nodePtr)
+    {
+        if (nodePtr->data == item)
+        {
+            item = nodePtr->data;
+            return true;
+        }
+        nodePtr = nodePtr->next;
+    }
+    return false;
+}
+
+template<class ItemType>
 void LinkedList<ItemType>::printList(void callback(ItemType &)) const
 {
     ListNode *nodePtr = head;

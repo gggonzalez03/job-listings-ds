@@ -121,7 +121,10 @@ bool HashTable<K,Itemtype>::searchTable(K key, Itemtype &item) {
         item = *found;
         return true;
     }
-    // search overflow
+    
+    if (overflow->searchList(item))
+        return true;
+    
     return false;
 }
 
